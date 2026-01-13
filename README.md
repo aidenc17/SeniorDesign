@@ -1,1 +1,1 @@
-# Senior Design 2026
+# Senior Design / Team Projects II 2026
