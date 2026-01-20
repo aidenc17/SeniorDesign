@@ -42,8 +42,6 @@ const val DEFAULT_REGULAR_URL = "http://192.168.50.233:8080/"      // Change thi
 const val DEFAULT_AUTHORIZED_URL = "http://192.168.50.233:8081/"   // Change this
 ```
 
-**See [CUSTOMIZATION_GUIDE.md](CUSTOMIZATION_GUIDE.md) for more customization options.**
-
 ## Run
 
 Open the project in Android Studio and run on an emulator or physical device.
