@@ -1,6 +1,6 @@
 # Photo Gallery Android App
 
-**Simple, easy-to-customize photo gallery app** that fetches images from nginx endpoints with biometric authentication.
+**Simple, easy to customize photo gallery app** that fetches images from nginx endpoints with biometric authentication.
 
 **Documentation:**
 - **[SIMPLIFIED_STRUCTURE.md](SIMPLIFIED_STRUCTURE.md)** - Understand the 3-page design
