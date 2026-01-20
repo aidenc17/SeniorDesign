@@ -26,8 +26,13 @@ sudo apt update
 sudo apt install -y nginx
 ```
 
-### Enable and start nginx
+#### Enable and start nginx
 ```
 sudo systemctl enable nginx
 sudo systemctl start nginx
+```
+
+#### Verify Nginx
+```
+nginx -v
 ```
