@@ -87,3 +87,13 @@ sudo systemctl reload nginx
 ```
 
 ## 4. AWS Security Group configuration
+
+On your Security Group, allow access to customTCP 8080 & 8081.
+
+## Test endpoints
+```
+curl http://AWSPublicIP:8080/
+curl http://AWSPublicIP:8081/
+```
+
+## Note to self or whoever is reading this, make sure you set up elastic IP, otherwise everytime AWS restarts it will assign random public IP.
