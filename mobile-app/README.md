@@ -2,9 +2,6 @@
 
 **Simple, easy to customize photo gallery app** that fetches images from nginx endpoints with biometric authentication.
 
-**Documentation:**
-- **[CUSTOMIZATION_GUIDE.md](CUSTOMIZATION_GUIDE.md)** - Detailed customization guide
-
 ## Features
 
 **Simple 3-Page Design**
