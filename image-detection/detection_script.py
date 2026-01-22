@@ -10,6 +10,17 @@ def dectect_red_circles(path_to_image):
     script used for detection of red circles in images.
     """
 
+    
+def crop_circle(image, x, y, r):
+    top_left_x = max(0, x - r)
+    top_left_y = max(0, y - r)
+    bottom_right_x = min(image.shape[1], x + r)
+    bottom_right_y = min(image.shape[0], y + r)
+
+    cropped_image = image[top_left_y:bottom_right_y, top_left_x:bottom_right_x]
+
+    return cropped_image
+
 
 def load_image(image_path):
     
