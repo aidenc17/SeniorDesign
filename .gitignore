@@ -15,6 +15,9 @@ __pycache__/
 .vscode/
 .idea/
 
+# deteted images 
+deteted_images/
+
 # mac
 .DS_Store
 
