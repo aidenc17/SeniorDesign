@@ -34,14 +34,6 @@
 3. Enter new URLs
 4. Tap "Save Settings"
 
-### Changing Default URLs in Code
-**File:** `app/src/main/java/com/example/androidapp/ConfigManager.kt` (lines 33-34)
-
-```kotlin
-const val DEFAULT_REGULAR_URL = "http://192.168.50.233:8080/"      // Change this
-const val DEFAULT_AUTHORIZED_URL = "http://192.168.50.233:8081/"   // Change this
-```
-
 ## Run
 
 Open the project in Android Studio and run on an emulator or physical device.
