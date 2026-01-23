@@ -13,10 +13,8 @@
 
 **Configurable URLs**
 - Settings screen to change endpoints after authentication.
-- Or edit directly in code (clearly marked)
 
 **Photo Features**
-- Grid layout
 - Fullscreen zoom viewer
 - Pull to refresh
 - Auto loads images and videos from nginx endpoints
@@ -50,13 +48,4 @@ Open the project in Android Studio and run on an emulator or physical device.
 ### Common Issues
 - **Images not loading:** Check that nginx server is running and accessible from device
 - **Biometric not working:** Ensure device has fingerprint/face unlock enrolled
-- **HTTP connection fails:** Verify network_security_config.xml allows your server IP
-
-## Dependencies (Minimal & Clean)
-
-**Core:**
-- Kotlin 2.2.10
-- AndroidX Core 1.17.0, AppCompat 1.7.1
-- Material Design 1.13.0
-- Target SDK 36
 
