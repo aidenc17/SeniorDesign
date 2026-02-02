@@ -15,9 +15,12 @@ __pycache__/
 .vscode/
 .idea/
 
-# deteted images 
-deteted_images/
-
 # mac
 .DS_Store
 
+# image detection outputs
+detected_images/
+test_images/
+data/detected/
+data/test_images/
+data/annotated/
