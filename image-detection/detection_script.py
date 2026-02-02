@@ -86,15 +86,15 @@ def main():
         return
     
     image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    print(f"Found {len(image_files)} images")
+    print(f"Found {len(image_files)} images\n")
     
     detected_count = 0
     
     for filename in image_files:
-        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):
-            image_path = os.path.join(input_folder, filename)
+        image_path = os.path.join(input_folder, filename)
+        
+        try:
             image = load_image(image_path)
-            
             circle = detect_red_circle(image_path)
             
             if circle is not None:
@@ -103,11 +103,13 @@ def main():
                 output_path = os.path.join(output_folder, filename)
                 cv2.imwrite(output_path, cropped_image)
                 detected_count += 1
-                print(f"✓ Detected red circle in {filename}, saved cropped image.")
+                print(f" Detected red circle in {filename}, saved cropped image.")
             else:
-                print(f"✗ No red circle detected in {filename}.")
+                print(f"Error: {filename}")
+        except Exception as e:
+            print(f"✗ {filename} - Error: {e}")
     
-    print(f"\nDetection complete! Found {detected_count} images with red circles.")
+    print(f"\nDetection complete! Found {detected_count}/{len(image_files)} images with red circles.")
 
 if __name__ == "__main__":
     INPUT_FOLDER = "test_images"      # folder that contains images from usb script
