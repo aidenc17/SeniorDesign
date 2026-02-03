@@ -18,3 +18,9 @@ __pycache__/
 # mac
 .DS_Store
 
+# image detection outputs
+detected_images/
+test_images/
+data/detected/
+data/test_images/
+data/annotated/
