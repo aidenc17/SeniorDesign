@@ -3,6 +3,7 @@ import numpy as np
 import os
 import shutil
 from pathlib import Path
+import platform
 
 def detect_red_circle(image_path):
     image = cv2.imread(image_path)
@@ -74,9 +75,65 @@ def load_image(image_path):
         raise FileNotFoundError(f"Image not found at path: {image_path}")
     return image
 
+def find_usb_folder(folder_name="test_images"):
+    """
+    search for a USB drive and look for a specific folder on it.
+    in order this : mac (/Volumes/), raspberry pi (/media/), windows (D:, E:, F:, G:) 
+    """
+    system = platform.system()
+    search_paths = []
+    
+    if system == "Darwin":  # macs
+        search_paths = ["/Volumes"]
+    elif system == "Linux":  # raspberry pis
+        search_paths = ["/media"]
+    elif system == "Windows":
+        # checking windows usb letters
+        search_paths = [f"{letter}:" for letter in "DEFGHI" if os.path.exists(f"{letter}:")]
+    
+    print(f"Searching for USB in {search_paths}...")
+    
+    # mac and linux searches in directories
+    if system in ["Darwin", "Linux"]:
+        for volumes_path in search_paths:
+            if not os.path.exists(volumes_path):
+                continue
+            
+            for volume in os.listdir(volumes_path):
+                volume_path = os.path.join(volumes_path, volume)
+                
+                if not os.path.isdir(volume_path):
+                    continue
+                
+                target_path = os.path.join(volume_path, folder_name)
+                if os.path.isdir(target_path):
+                    print(f"Found '{folder_name}' at: {target_path}")
+                    return target_path
+    
+    # checking windows drives
+    elif system == "Windows":
+        for drive in search_paths:
+            target_path = os.path.join(drive, folder_name)
+            if os.path.isdir(target_path):
+                print(f"Found '{folder_name}' at: {target_path}")
+                return target_path
+    
+    print(f"✗ Could not find USB with '{folder_name}' folder")
+    return None
+
 def main(): 
     input_folder = INPUT_FOLDER
     output_folder = OUTPUT_FOLDER
+    
+    # Try to find USB folder if local one doesn't exist
+    if not os.path.exists(input_folder):
+        print(f"Local folder not found. Searching USB...\n")
+        usb_folder = find_usb_folder("test_images")
+        if usb_folder:
+            input_folder = usb_folder
+        else:
+            print("ERROR: Could not locate input folder")
+            return
     
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     
@@ -103,15 +160,15 @@ def main():
                 output_path = os.path.join(output_folder, filename)
                 cv2.imwrite(output_path, cropped_image)
                 detected_count += 1
-                print(f" Detected red circle in {filename}, saved cropped image.")
+                print(f"Detected red circle in {filename}, saved cropped image.")
             else:
                 print(f"Error: {filename}")
         except Exception as e:
-            print(f"✗ {filename} - Error: {e}")
+            print(f"{filename} - Error: {e}")
     
     print(f"\nDetection complete! Found {detected_count}/{len(image_files)} images with red circles.")
 
 if __name__ == "__main__":
-    INPUT_FOLDER = "test_images"      # folder that contains images from usb script
-    OUTPUT_FOLDER = "detected_images" # folder to save images with detected red circles
+    INPUT_FOLDER = "test_images"      # fallback: local folder
+    OUTPUT_FOLDER = "detected_images"
     main()
