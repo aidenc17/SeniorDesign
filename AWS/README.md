@@ -86,14 +86,28 @@ sudo nginx -t
 sudo systemctl reload nginx
 ```
 
-## 4. AWS Security Group configuration
-
-On your Security Group, allow access to customTCP 8080 & 8081.
-
-## Test endpoints
-```
-curl http://AWSPublicIP:8080/
-curl http://AWSPublicIP:8081/
-```
-
 ## Note to self or whoever is reading this, make sure you set up elastic IP, otherwise everytime AWS restarts it will assign random public IP.
+
+# Secure Media Server with HTTPS, App only Access, and Android Client
+
+This project sets up a secure media server on AWS using **Nginx**, **HTTPS (self-signed certificate)**, and **app-only access control**, with an **Android app** as the trusted client.
+
+The final result:
+- Media is served over HTTPS instead of HTTP
+- Browsers are blocked from accessing **private** media
+- Only the Android app can access private content
+- The app trusts a self-signed certificate embedded inside it
+- Biometric auth gates access inside the app
+  
+---
+
+## Architecture Overview
+
+- Ports **8080 / 8081** were removed (was for http endpoint test)
+- Only **80 → 443 redirect** and **443 HTTPS** remain
+- Self-signed certificate is used
+- Web browser access to **private** media blocked
+- Only Authenticated user via app can access **private** media
+---
+
+
