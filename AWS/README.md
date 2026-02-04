@@ -5,7 +5,6 @@ This guide explains how to install and configure **nginx on Ubuntu (AWS EC2)** t
 
 - **Public media** (no auth)  
 - **Private media** (separate port, app-controlled access via mobile app)
-- TBD
 ---
 
 Purpose of this documentation is to replicate setup across multiple AWS instances at ease.
@@ -97,7 +96,7 @@ The final result:
 - Browsers are blocked from accessing **private** media
 - Only the Android app can access private content
 - The app trusts a self-signed certificate embedded inside it
-- Biometric auth gates access inside the app
+- Biometric auth allows access inside the app
   
 ---
 
