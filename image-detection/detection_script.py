@@ -125,7 +125,7 @@ def main():
     input_folder = INPUT_FOLDER
     output_folder = OUTPUT_FOLDER
     
-    # Try to find USB folder if local one doesn't exist
+    # try to find USB folder if local one doesn't exist
     if not os.path.exists(input_folder):
         print(f"Local folder not found. Searching USB...\n")
         usb_folder = find_usb_folder("test_images")
@@ -160,13 +160,18 @@ def main():
                 output_path = os.path.join(output_folder, filename)
                 cv2.imwrite(output_path, cropped_image)
                 detected_count += 1
-                print(f"Detected red circle in {filename}, saved cropped image.")
+                print(f"{filename}")
             else:
-                print(f"Error: {filename}")
+                print(f"{filename}")
         except Exception as e:
             print(f"{filename} - Error: {e}")
     
-    print(f"\nDetection complete! Found {detected_count}/{len(image_files)} images with red circles.")
+    print(f"\nDetection complete. Found {detected_count}/{len(image_files)} images with red circles.")
+    
+    # zips the detected images folder
+    zip_path = os.path.join(os.path.dirname(output_folder), f"{output_folder}.zip")
+    shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', output_folder)
+    print(f"Created zip file: {zip_path}")
 
 if __name__ == "__main__":
     INPUT_FOLDER = "test_images"      # fallback: local folder
