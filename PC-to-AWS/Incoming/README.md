@@ -11,4 +11,5 @@
  2. If OS `windows` double click on the exe file.
  3. the `.exe` file will open a terminal and wait for any files that have video / image extensions assigned by the script inside the folder.
     Note: this script requires PEM key to communicate to AWS servers, so it needs to be added same directory as the script / `.exe` file.
- 4. 
+ 4. The `.exe` and the script is configured to SKIP configuration files and PEM keys and can be changed in the script.
+ 5. 
