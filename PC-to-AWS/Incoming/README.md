@@ -1,4 +1,4 @@
-## README
+## PC to AWS Script (Windows OS /w python)
 
 ### This script is designed to upload images form any local Windows OS PC to aws with minimal setup required
  #### Files added:
