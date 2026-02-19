@@ -125,8 +125,12 @@ def main():
     input_folder = INPUT_FOLDER
     output_folder = OUTPUT_FOLDER
     
-    # try to find USB folder if local one doesn't exist
-    if not os.path.exists(input_folder):
+    # Prioritize Raspberry Pi first
+    if os.path.exists("/media/raspberrypi/BOOTS/test_images"):
+        input_folder = "/media/raspberrypi/BOOTS/test_images"
+        print("Found Raspberry Pi USB - using test_images from there\n")
+    # Then try to find any USB folder
+    elif not os.path.exists(input_folder):
         print(f"Local folder not found. Searching USB...\n")
         usb_folder = find_usb_folder("test_images")
         if usb_folder:
