@@ -122,29 +122,17 @@ def find_usb_folder(folder_name="test_images"):
     return None
 
 def main(): 
-    input_folder = INPUT_FOLDER
+    # now only look for Raspberry Pi folder
+    input_folder = "/media/raspberrypi/BOOTS"
     output_folder = OUTPUT_FOLDER
     
-    # Prioritize Raspberry Pi first
-    if os.path.exists("/media/raspberrypi/BOOTS/test_images"):
-        input_folder = "/media/raspberrypi/BOOTS/test_images"
-        print("Found Raspberry Pi USB - using test_images from there\n")
-    # Then try to find any USB folder
-    elif not os.path.exists(input_folder):
-        print(f"Local folder not found. Searching USB...\n")
-        usb_folder = find_usb_folder("test_images")
-        if usb_folder:
-            input_folder = usb_folder
-        else:
-            print("ERROR: Could not locate input folder")
-            return
+    print(f"Looking for images in: {input_folder}")
+    
+    if not os.path.exists(input_folder):
+        print(f"ERROR: Raspberry Pi folder not found at {input_folder}")
+        return
     
     Path(output_folder).mkdir(parents=True, exist_ok=True)
-    
-    print(f"Looking for images in: {os.path.abspath(input_folder)}")
-    if not os.path.exists(input_folder):
-        print(f"ERROR: Input folder does not exist: {input_folder}")
-        return
     
     image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
     print(f"Found {len(image_files)} images\n")
@@ -178,6 +166,5 @@ def main():
     print(f"Created zip file: {zip_path}")
 
 if __name__ == "__main__":
-    INPUT_FOLDER = "test_images"      # fallback: local folder
     OUTPUT_FOLDER = "detected_images"
     main()
