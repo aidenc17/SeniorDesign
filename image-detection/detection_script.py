@@ -86,7 +86,7 @@ def find_usb_folder(folder_name="test_images"):
     if system == "Darwin":  # macs
         search_paths = ["/Volumes"]
     elif system == "Linux":  # raspberry pis
-        search_paths = ["/media"]
+        search_paths = ["/media/rasperrypi/BOOTS", "/media"] 
     elif system == "Windows":
         # checking windows usb letters
         search_paths = [f"{letter}:" for letter in "DEFGHI" if os.path.exists(f"{letter}:")]
