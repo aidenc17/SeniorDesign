@@ -4,34 +4,46 @@ from PIL import Image
 import zipfile
 import os
 
+# makes a header to send the md5 checksum expected as the first chunk sent
+def make_start_header(total_packets, chunk_size, md5_hash):
 
-def sender_sim(folder_name="detected_images.zip", chunk_dump="sent_chunks.bin"):
-    if not os.path.exists(folder_name):
-        print("Error: folder does not exist:", folder_name)
+    return f"START|{total_packets}|{chunk_size}|{md5_hash}"
+
+def sender_sim(filename="detected_images.zip", chunk_file="sent_chunks.bin"):
+    
+    # path where zipped folder of images are stored on sender pi
+    # will add in once pi is up and running and can be tested properly
+    # /home/raspberrypi/SeniorDesign/image-detection/detected_images.zip
+    if not os.path.exists(filename):
+        print("Error: folder does not exist:", filename)
         return
 
-
     # compute MD5 + size
-    file_size = os.path.getsize(folder_name)
-    file_hash = md5_file(folder_name)
+    file_size = os.path.getsize(filename)
+    file_hash = md5_file(filename)
 
     print("Zip size:", file_size, "bytes")
     print("MD5:", file_hash)
     print("Chunk size:", CHUNK_SIZE, "bytes")
 
     # chunk the zip
-    chunks = split_file_into_chunks(folder_name)
-    print("Total chunks:", len(chunks))
+    chunks = split_file_into_chunks(filename)
+    total_chunks = len(chunks)
 
-    # simulate sending
-    write_chunks_to_file(chunks, chunk_dump)
-    print("Wrote chunks to:", chunk_dump)
+    print("Total chunks:", total_chunks)
 
-    # write the expected MD5 to a file so receiver can compare 
-    with open("expected_md5.txt", "w") as f:
-        f.write(file_hash)
+    # creating start header
+    header = make_start_header(total_chunks, CHUNK_SIZE, file_hash)
 
-    print("Wrote expected MD5 to: expected_md5.txt")
+    # simulates sending start header
+    with open("start_header.txt", "w") as f:
+        f.write(header)
+
+    print("Wrote START header:", header)
+
+    # simulating sending chunk data
+    write_chunks_to_file(chunks, chunk_file)
+    print("Wrote chunks to:", chunk_file)
 
 if __name__ == "__main__":
     sender_sim()
