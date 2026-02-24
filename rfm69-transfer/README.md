@@ -12,7 +12,10 @@
     computes md5 checksum for a file to verify integrity.
 
 - `sender.py`
-    Placeholder for sender-side.
+    takes in folder to be checksummed and prepares it for transmission via chunked bytes.
 
 - `receiver.py`
-    Placeholder for receiver-side.
+    takes transmitted folder, rebuilds it, checks against md5 checksum to verify all data matches.
+
+- `chunking.py`
+    splits folder into 60-byte chunks for transmission and writes to new folder.
