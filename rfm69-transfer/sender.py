@@ -36,12 +36,14 @@ def sender_sim(filename="detected_images.zip", chunk_file="sent_chunks.bin"):
     header = make_start_header(total_chunks, CHUNK_SIZE, file_hash)
 
     # simulates sending start header
+    # will be replaced once rf is connected to pi
     with open("start_header.txt", "w") as f:
         f.write(header)
 
     print("Wrote START header:", header)
 
     # simulating sending chunk data
+    # will be replaced once rf is connected to pi
     write_chunks_to_file(chunks, chunk_file)
     print("Wrote chunks to:", chunk_file)
 
