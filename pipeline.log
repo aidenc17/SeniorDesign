@@ -1,0 +1,85 @@
+[Thu Feb 26 08:56:52 EST 2026] Starting pipeline...
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /image-detection/detection_script.py
+---
+[0;31mERROR: Detection script not found: /image-detection/detection_script.py[0m
+[Thu Feb 26 09:00:23 EST 2026] Starting pipeline...
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /Users/aidencox/git/SeniorDesign/detection_script.py
+---
+[0;31mERROR: Detection script not found: /Users/aidencox/git/SeniorDesign/detection_script.py[0m
+[Thu Feb 26 09:03:05 EST 2026] Starting pipeline...
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /Users/aidencox/git/SeniorDesign/image-detection/detection_script.py
+---
+Traceback (most recent call last):
+  File "/Users/aidencox/git/SeniorDesign/image-detection/detection_script.py", line 1, in <module>
+    import cv2
+ModuleNotFoundError: No module named 'cv2'
+[0;31m Detection script failed[0m
+[Thu Feb 26 09:13:48 EST 2026] Starting pipeline...
+Working directory: /Users/aidencox/git/SeniorDesign
+
+[1;33mActivating virtual environment...[0m
+Venv location: /Users/aidencox/git/SeniorDesign/venv
+[0;32m✓ Virtual environment activated[0m
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /Users/aidencox/git/SeniorDesign/image-detection/detection_script.py
+---
+Looking for images in: /media/raspberrypi/BOOTS
+ERROR: Raspberry Pi folder not found at /media/raspberrypi/BOOTS
+[0;32m Detection completed successfully[0m
+
+[1;33mVerifying output...[0m
+[0;32m ZIP file created: /Users/aidencox/git/SeniorDesign/image-detection/detected_images.zip (176K)[0m
+
+[1;33m[STEP 2/2][0m Running checksum verification...
+Script: 
+---
+[0;31mERROR: Checksum script not found: [0m
+[Thu Feb 26 09:15:58 EST 2026] Starting pipeline...
+Working directory: /Users/aidencox/git/SeniorDesign
+
+[1;33mActivating virtual environment...[0m
+Venv location: /Users/aidencox/git/SeniorDesign/venv
+[0;32m✓ Virtual environment activated[0m
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /Users/aidencox/git/SeniorDesign/image-detection/detection_script.py
+---
+Looking for images in: /media/raspberrypi/BOOTS
+ERROR: Raspberry Pi folder not found at /media/raspberrypi/BOOTS
+[0;32m Detection completed successfully[0m
+
+[1;33mVerifying output...[0m
+[0;32m ZIP file created: /Users/aidencox/git/SeniorDesign/image-detection/detected_images.zip (176K)[0m
+
+[1;33m[STEP 2/2][0m Running checksum verification...
+Script: 
+---
+[0;31mERROR: Checksum script not found: [0m
+[Thu Feb 26 11:49:46 EST 2026] Starting pipeline...
+Working directory: /Users/aidencox/git/SeniorDesign
+
+[1;33mActivating virtual environment...[0m
+Venv location: /Users/aidencox/git/SeniorDesign/venv
+[0;32m Virtual environment activated[0m
+
+[1;33m[STEP 1/2][0m Running image detection...
+Script: /Users/aidencox/git/SeniorDesign/image-detection/detection_script.py
+---
+Looking for images in: /media/raspberrypi/BOOTS
+ERROR: Raspberry Pi folder not found at /media/raspberrypi/BOOTS
+[0;32m Detection completed successfully[0m
+
+[1;33mVerifying output...[0m
+[0;32m ZIP file created: /Users/aidencox/git/SeniorDesign/image-detection/detected_images.zip (176K)[0m
+
+[1;33m[STEP 2/2][0m Running checksum verification...
+Script: 
+---
+[0;31mERROR: Checksum script not found: [0m
