@@ -73,6 +73,8 @@ PEM_PATH = ""
 # Remote directory on the server where files should be uploaded
 REMOTE_DIR = "/srv/media/private"
 
+DIR = "/RF-receiver/"
+
 # Allowed file extensions (images/videos only). Add/remove as needed.
 ALLOWED_EXTENSIONS = {
     ".jpg",
