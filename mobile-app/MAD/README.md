@@ -1,70 +1,51 @@
-# MAD
+# Photo Gallery Android App
 
-MAD is an Android application built with Jetpack Compose that lets you browse media content delivered from both public and authenticated endpoints. It combines a modern UI, offline-friendly storage, secure biometric-protected areas, and media playback powered by ExoPlayer to create a responsive multimedia experience.
+**Simple, easy to customize photo gallery app** that fetches images from nginx endpoints with biometric authentication.
 
 ## Features
 
-- **Media endpoint configuration** – Update the regular and authenticated media base URLs directly from the in-app Settings screen. Changes are persisted and surfaced across the app.
-- **Media browsing & playback** – Stream video/audio using the latest `androidx.media3` ExoPlayer components with `coil-video` thumbnails.
-- **Secure areas** – Opt-in biometric authentication (fingerprint, face, or device credential) using `androidx.biometric` to gate sensitive flows.
-- **Offline-ready state** – Lightweight caching and preferences through Jetpack DataStore for fast relaunches and user-tailored defaults.
-- **Navigation-first UX** – Compose Navigation keeps the app single-activity while enabling deep links and clear back-stack behavior.
-- **Material 3 design system** – Consistent theming, typography, icons, and motion following modern Android guidelines.
+**Simple 3-Page Design**
+- Main page with two buttons
+- Separate Regular and Authorized user pages
 
-## Tech Stack
+**Biometric Authentication**
+- Fingerprint/face required for authorized user button
 
-| Layer            | Libraries / Tools |
-|------------------|-------------------|
-| UI               | Jetpack Compose (Material 3, Foundation, Compose BOM), Navigation-Compose |
-| State & DI       | AndroidX Lifecycle (ViewModel, Runtime), Kotlin Coroutines |
-| Storage          | AndroidX DataStore Preferences |
-| Media            | AndroidX Media3 ExoPlayer & UI, Coil (images & video frames) |
-| Networking       | OkHttp |
-| Platform Support | Activity Compose, Core KTX, Biometric |
+**Configurable URLs**
+- Settings screen to change endpoints after authentication.
 
-## Architecture
+**Photo Features**
+- Fullscreen zoom viewer
+- Pull to refresh
+- Auto loads images and videos from nginx endpoints
 
-The app follows a unidirectional data flow inspired by MVVM:
+## Requirements
 
-1. **UI Layer** – Compose screens (e.g., `SettingsScreen`) consume immutable UI state and emit user intents.
-2. **ViewModel Layer** – `SettingsViewModel` (and peers) expose Kotlin `StateFlow`s and coordinate persistence or business rules.
-3. **Data Layer** – Repositories persist data via DataStore, fetch remote media via OkHttp, and stream playback with Media3.
+- **Android Studio**
+- **Android Phone with biometric feature capability**
 
-This approach keeps screens stateless, improves previewability, and simplifies testing.
+## Configuration
 
-## Getting Started
+### Changing URLs at Runtime (Settings Screen)
+1. Open the app
+2. Tap the settings icon (top-right)
+3. Enter new URLs
+4. Tap "Save Settings"
 
-### Prerequisites
-- Android Studio Giraffe (or newer) with the latest Compose tooling
-- JDK 17+
-- Android device/emulator running API 24+
+## Run
 
-### Setup
-1. Clone the repo:
-   ```bash
-   git clone https://github.com/<your-org>/MAD.git
-   ```
-2. Open the project in Android Studio and let Gradle sync.
-3. Create a `local.properties` file (if missing) with your SDK path:
-   ```
-   sdk.dir=/path/to/android/sdk
-   ```
-4. Run the **app** configuration on a device/emulator.
+Open the project in Android Studio and run on an emulator or physical device.
 
-## Configuring Media URLs
+**Note:** For biometric authentication testing, use a physical device or an emulator with biometric enrollment configured.
 
-Navigate to **Settings → Media Endpoints** to define:
-- **Regular URL**: Public base endpoint (e.g., `http://192.168.0.10:8080/`).
-- **Authenticated URL**: Protected endpoint requiring credentials (e.g., `http://192.168.0.10:8081/`).
+## Troubleshooting
 
-Tap **Save** to persist changes; a snackbar confirms success. These values drive playback requests across the app.
+### Build Errors
+- **Gradle sync fails:** Try File > Invalidate Caches > Invalidate and Restart
+- **Dependency errors:** Ensure you have internet connection for Gradle to download dependencies
+- **Version mismatch:** Check that Gradle version matches Android Gradle Plugin version
 
-## Contributing
+### Common Issues
+- **Images not loading:** Check that nginx server is running and accessible from device
+- **Biometric not working:** Ensure device has fingerprint/face unlock enrolled
 
-1. Create a feature branch from `main`.
-2. Implement changes and add tests where relevant.
-3. Submit a pull request with a concise summary and screenshots (if UI changes).
-
-## License
-
-This project is licensed under the MIT License. See [LICENSE](LICENSE) for details.
