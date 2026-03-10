@@ -1,6 +1,4 @@
-# Photo Gallery Android App
-
-**Simple, easy to customize photo gallery app** that fetches images from nginx endpoints with biometric authentication.
+# Mobile App Development - MAD
 
 ## Features
 
@@ -16,7 +14,6 @@
 
 **Photo Features**
 - Fullscreen zoom viewer
-- Pull to refresh
 - Auto loads images and videos from nginx endpoints
 
 ## Requirements
