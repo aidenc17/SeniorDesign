@@ -15,4 +15,4 @@
  5. If you want files added and uploaded to AWS it needs to be inside `Incoming` folder.
  6. It will be uploaded to the `Private` folder in the AWS where nginx will pull its data from Authenticated Users.
 
-Note to self or any other user who will use thsi script, Don't forget to turn on AWS.
+Note to self or any other user who will use this script, Don't forget to turn on AWS.
