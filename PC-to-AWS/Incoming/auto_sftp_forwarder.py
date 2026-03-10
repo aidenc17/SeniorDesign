@@ -1,8 +1,8 @@
 """
-Auto SFTP forwarder for images/videos placed in this folder.
+Auto SFTP forwarder for images/videos placed in a specific subfolder.
 
 Note to users:
-Place this script and PEM key inside where this script is located.
+Set WATCH_SUBDIR to the folder name you want to monitor.
 Fill in the CONFIG values below, then run the script.
 """
 
@@ -68,12 +68,13 @@ SSH_USER = "ubuntu"
 
 # Path to PEM key. If blank, the script auto-detects a .pem in this folder.
 # If relative, it's resolved from this script's folder.
-PEM_PATH = ""
+# PEM_PATH = ""
 
 # Remote directory on the server where files should be uploaded
 REMOTE_DIR = "/srv/media/private"
 
-DIR = "/RF-receiver/"
+# Subfolder to watch for incoming images (relative to this script's directory)
+WATCH_SUBDIR = "RF_receiver"
 
 # Allowed file extensions (images/videos only). Add/remove as needed.
 ALLOWED_EXTENSIONS = {
@@ -120,7 +121,7 @@ else:
     BASE_DIR = Path(__file__).resolve().parent
 
 SCRIPT_DIR = BASE_DIR
-WATCH_DIR = BASE_DIR
+WATCH_DIR = BASE_DIR / WATCH_SUBDIR
 LOG_FILE = BASE_DIR / "transfer.log"
 EXIT_EVENT = Event()
 
@@ -136,30 +137,30 @@ def setup_logging() -> None:
     )
 
 
-def resolve_pem_path() -> Path:
-    if PEM_PATH.strip():
-        pem = Path(PEM_PATH)
-        if not pem.is_absolute():
-            pem = BASE_DIR / pem
-        if not pem.exists():
-            raise FileNotFoundError(f"PEM key not found at: {pem}")
-        return pem
-
-    candidates = [
-        path
-        for path in BASE_DIR.iterdir()
-        if path.is_file() and path.suffix.lower() == ".pem"
-    ]
-    if not candidates:
-        raise FileNotFoundError(
-            "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
-        )
-    if len(candidates) > 1:
-        names = ", ".join(sorted(p.name for p in candidates))
-        raise ValueError(
-            "Multiple .pem files found. Set PEM_PATH to choose one: " + names
-        )
-    return candidates[0]
+# def resolve_pem_path() -> Path:
+#     if PEM_PATH.strip():
+#         pem = Path(PEM_PATH)
+#         if not pem.is_absolute():
+#             pem = BASE_DIR / pem
+#         if not pem.exists():
+#             raise FileNotFoundError(f"PEM key not found at: {pem}")
+#         return pem
+#
+#     candidates = [
+#         path
+#         for path in BASE_DIR.iterdir()
+#         if path.is_file() and path.suffix.lower() == ".pem"
+#     ]
+#     if not candidates:
+#         raise FileNotFoundError(
+#             "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
+#         )
+#     if len(candidates) > 1:
+#         names = ", ".join(sorted(p.name for p in candidates))
+#         raise ValueError(
+#             "Multiple .pem files found. Set PEM_PATH to choose one: " + names
+#         )
+#     return candidates[0]
 
 
 def validate_config() -> None:
@@ -220,10 +221,10 @@ def cleanup_empty_dirs(base_dir: Path, target_dir: Path) -> None:
 
 
 class SFTPUploader:
-    def __init__(self, host: str, user: str, pem_path: Path, remote_dir: str):
+    def __init__(self, host: str, user: str, remote_dir: str):
         self.host = host
         self.user = user
-        self.pem_path = pem_path
+        # self.pem_path = pem_path
         self.remote_dir = remote_dir
         self.client = None
         self.sftp = None
@@ -236,9 +237,9 @@ class SFTPUploader:
         client.connect(
             self.host,
             username=self.user,
-            key_filename=str(self.pem_path),
-            allow_agent=False,
-            look_for_keys=False,
+            # key_filename=str(self.pem_path),
+            allow_agent=True,
+            look_for_keys=True,
             timeout=10,
         )
         self.client = client
@@ -288,14 +289,14 @@ class SFTPUploader:
 
 
 class IncomingHandler(FileSystemEventHandler):
-    def __init__(self, uploader: SFTPUploader, pem_name: str) -> None:
+    def __init__(self, uploader: SFTPUploader) -> None:
         super().__init__()
         self.uploader = uploader
         self.last_seen: dict[str, float] = {}
         self.exclude_names = set(EXCLUDE_NAMES)
         self.exclude_names.add(Path(__file__).name)
-        if pem_name:
-            self.exclude_names.add(pem_name)
+        # if pem_name:
+        #     self.exclude_names.add(pem_name)
 
     def on_created(self, event) -> None:
         self._handle_event(event)
@@ -383,13 +384,17 @@ def main() -> None:
     setup_logging()
     try:
         validate_config()
-        pem_path = resolve_pem_path()
+        # pem_path = resolve_pem_path()
     except Exception as exc:
         request_exit("Configuration error", exc)
         return
 
-    uploader = SFTPUploader(AWS_HOST, SSH_USER, pem_path, REMOTE_DIR)
-    handler = IncomingHandler(uploader, pem_path.name)
+    if not WATCH_DIR.exists():
+        logging.info("Creating watch folder: %s", WATCH_DIR)
+        WATCH_DIR.mkdir(parents=True, exist_ok=True)
+
+    uploader = SFTPUploader(AWS_HOST, SSH_USER, REMOTE_DIR)
+    handler = IncomingHandler(uploader)
 
     observer = Observer()
     observer.schedule(handler, str(WATCH_DIR), recursive=False)
