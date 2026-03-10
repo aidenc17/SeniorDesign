@@ -28,7 +28,7 @@ This script monitors a specific subfolder (`RF_receiver`) and  automatically upl
 
 ### Setup Instructions
 
-1. Ensure your SSH key is available via your system SSH agent or in `~/.ssh/` (the script uses SSH agent/key auto-discovery — no PEM file path needed).
+1. Ensure your SSH key is available via your system SSH agent or in `~/.ssh/`.
 
 2. Run the script:
    - **Python:** Run `python auto_sftp_forwarder.py`
