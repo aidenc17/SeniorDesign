@@ -9,7 +9,7 @@
 - Separate Regular and Authorized user pages
 
 **Biometric Authentication**
-- Fingerprint/face required for authorized user button
+- Fingerprint required for authorized user button
 
 **Configurable URLs**
 - Settings screen to change endpoints after authentication.
