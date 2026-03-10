@@ -87,7 +87,15 @@ fi
 ZIP_SIZE=$(du -h "$DETECTED_IMAGES_ZIP" | cut -f1)
 echo -e "${GREEN} ZIP file created: $DETECTED_IMAGES_ZIP ($ZIP_SIZE)${NC}"
 
-# pipeline Complete
+# TODO: running transmission scripts
+# step 3: running transmission scripts
+
+
+# TODO: running AWS upload script
+# step 4: run toms python AWS 
+
+
+# pipeline complete
 echo -e "\n${BLUE}======================================${NC}"
 echo -e "${GREEN}Pipeline completed successfully!${NC}"
 echo -e "${BLUE}======================================${NC}"
