@@ -1,9 +1,7 @@
 #!/bin/bash
 
-#####################################################
 # Death Star Detection Pipeline
-# Runs image detection, then checksum verification
-#####################################################
+# Runs image detection, then run transmsion, then upload script
 
 set -e  # Exit on any error
 
@@ -17,13 +15,12 @@ NC='\033[0m' # No Color
 # grab directory of the script
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# Configuration - all paths relative to script location
+# configuration - all paths relative to script location
 DETECTION_SCRIPT="$SCRIPT_DIR/image-detection/detection_script.py"
-#CHECKSUM_SCRIPT="$SCRIPT_DIR/checksum_script.py"
 DETECTED_IMAGES_ZIP="$SCRIPT_DIR/image-detection/detected_images.zip"
 LOG_FILE="$SCRIPT_DIR/pipeline.log"
 
-# Find venv - check common locations
+# find venv - check common locations
 if [ -d "$SCRIPT_DIR/venv" ]; then
     VENV_PATH="$SCRIPT_DIR/venv"
 elif [ -d "$SCRIPT_DIR/../venv" ]; then
@@ -43,7 +40,7 @@ echo -e "${BLUE}======================================${NC}"
 echo -e "${BLUE}Death Star Detection Pipeline${NC}"
 echo -e "${BLUE}======================================${NC}\n"
 
-# Start logging
+# start logging
 exec > >(tee -a "$LOG_FILE")
 exec 2>&1
 
@@ -70,7 +67,7 @@ if [ ! -f "$DETECTION_SCRIPT" ]; then
     exit 1
 fi
 
-# Run detection script
+# run detection script
 if python3 "$DETECTION_SCRIPT"; then
     echo -e "${GREEN} Detection completed successfully${NC}"
 else
@@ -90,33 +87,12 @@ fi
 ZIP_SIZE=$(du -h "$DETECTED_IMAGES_ZIP" | cut -f1)
 echo -e "${GREEN} ZIP file created: $DETECTED_IMAGES_ZIP ($ZIP_SIZE)${NC}"
 
-
-# Step 3: run checksum script
-echo -e "\n${YELLOW}[STEP 2/2]${NC} Running checksum verification..."
-echo "Script: $CHECKSUM_SCRIPT"
-echo "---"
-
-if [ ! -f "$CHECKSUM_SCRIPT" ]; then
-    echo -e "${RED}ERROR: Checksum script not found: $CHECKSUM_SCRIPT${NC}"
-    exit 1
-fi
-
-# Run checksum script
-if python3 "$CHECKSUM_SCRIPT"; then
-    echo -e "${GREEN} Checksum verification completed${NC}"
-else
-    echo -e "${RED} Checksum script failed${NC}"
-    exit 1
-fi
-
-#####################################################
-# Pipeline Complete
-#####################################################
+# pipeline Complete
 echo -e "\n${BLUE}======================================${NC}"
 echo -e "${GREEN}Pipeline completed successfully!${NC}"
 echo -e "${BLUE}======================================${NC}"
 echo "[$(date)] Pipeline finished"
 echo "Log saved to: $LOG_FILE"
 
-# Deactivate venv
+# deactivate venv
 deactivate
