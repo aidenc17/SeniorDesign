@@ -13,7 +13,6 @@ Purpose of this documentation is to replicate setup across multiple AWS instance
 
 - Ubuntu 24.04 (on AWS EC2)
 - SSH access to the server
-- Ports **8080** and **8081** allowed in AWS Security Group (can be any port of your choosing)
 - nginx installed as root / sudo
 
 ---
