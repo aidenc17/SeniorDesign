@@ -51,8 +51,11 @@ fun LandingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val activity = context as? FragmentActivity
-    val isRegularConfigured = settings.regularUrl.isNotBlank()
-    val isAuthenticatedConfigured = settings.authenticatedUrl.isNotBlank()
+
+    // We keep buttons enabled so users can reach settings inside the screens 
+    // even if URLs are not yet configured on a new device/emulator.
+    val isRegularConfigured = true 
+    val isAuthenticatedConfigured = true
 
     if (activity == null) {
         LandingScreenContent(
@@ -81,7 +84,6 @@ fun LandingScreen(
                 override fun onAuthenticationSucceeded(
                     result: BiometricPrompt.AuthenticationResult
                 ) {
-                    // Once the system confirms biometrics, open the protected gallery.
                     onAuthenticatedUser()
                 }
 
@@ -97,9 +99,8 @@ fun LandingScreen(
     val promptInfo = remember {
         BiometricPrompt.PromptInfo.Builder()
             .setTitle("Authenticated Access")
-            .setSubtitle("Use your fingerprint or face to continue")
-            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG)
-            .setNegativeButtonText("Cancel")
+            .setSubtitle("Use biometrics or device PIN to continue")
+            .setAllowedAuthenticators(BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL)
             .build()
     }
 
@@ -107,15 +108,16 @@ fun LandingScreen(
         snackbarHostState = snackbarHostState,
         onRegularUser = onRegularUser,
         onAuthenticatedClick = {
-            val canAuthenticate = BiometricManager.from(context).canAuthenticate(
-                BiometricManager.Authenticators.BIOMETRIC_STRONG
+            val biometricManager = BiometricManager.from(context)
+            val canAuthenticate = biometricManager.canAuthenticate(
+                BiometricManager.Authenticators.BIOMETRIC_STRONG or BiometricManager.Authenticators.DEVICE_CREDENTIAL
             )
+            
             if (canAuthenticate == BiometricManager.BIOMETRIC_SUCCESS) {
-                // This triggers the system biometric sheet on the device.
                 biometricPrompt.authenticate(promptInfo)
             } else {
                 scope.launch {
-                    snackbarHostState.showSnackbar("Biometric auth is not available.")
+                    snackbarHostState.showSnackbar("Please set up a screen lock (PIN/Pattern) in device settings.")
                 }
             }
         },

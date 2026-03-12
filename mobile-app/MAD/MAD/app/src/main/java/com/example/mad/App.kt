@@ -26,7 +26,7 @@ import com.example.mad.ui.screens.SettingsScreen
 import com.example.mad.ui.viewmodel.SettingsViewModel
 import com.example.mad.ui.viewmodel.SettingsViewModelFactory
 
-class MAD : Application(), ImageLoaderFactory {
+class MAD : Application() , ImageLoaderFactory {
     val settingsRepository by lazy { SettingsRepository(this) }
     val mediaRepository by lazy { MediaRepository() }
 
@@ -44,7 +44,7 @@ sealed class Screen(val route: String) {
     }
 
     data object Detail : Screen("detail?url={url}&type={type}") {
-        fun createRoute(url: String, type: MediaType): String {
+        fun createRoute(url: String , type: MediaType): String {
             return "detail?url=${Uri.encode(url)}&type=${type.name}"
         }
     }
@@ -64,22 +64,22 @@ fun MADApp() {
     val settingsState by settingsViewModel.settings.collectAsState()
 
     NavHost(
-        navController = navController,
+        navController = navController ,
         startDestination = Screen.Landing.route
     ) {
         composable(Screen.Landing.route) {
             LandingScreen(
-                settings = settingsState,
+                settings = settingsState ,
                 onRegularUser = {
                     navController.navigate(Screen.Gallery.createRoute(UserMode.Regular))
-                },
+                } ,
                 onAuthenticatedUser = {
                     navController.navigate(Screen.Gallery.createRoute(UserMode.Authenticated))
                 }
             )
         }
         composable(
-            route = Screen.Gallery.route,
+            route = Screen.Gallery.route ,
             arguments = listOf(navArgument("mode") { type = NavType.StringType })
         ) { backStackEntry ->
             val modeName = backStackEntry.arguments?.getString("mode") ?: UserMode.Regular.name
@@ -91,25 +91,25 @@ fun MADApp() {
             }
 
             GalleryScreen(
-                title = if (mode == UserMode.Authenticated) "Secret Files" else "Regular Users",
-                baseUrl = baseUrl,
-                repository = mediaRepository,
-                showSettings = mode == UserMode.Authenticated,
+                title = if (mode == UserMode.Authenticated) "Authenticated Users" else "Regular Users" ,
+                baseUrl = baseUrl ,
+                repository = mediaRepository ,
+                showSettings = mode == UserMode.Authenticated ,
                 onOpenSettings = {
                     navController.navigate(Screen.Settings.route)
-                },
+                } ,
                 onOpenDetail = { item ->
-                    navController.navigate(Screen.Detail.createRoute(item.url, item.type))
-                },
+                    navController.navigate(Screen.Detail.createRoute(item.url , item.type))
+                } ,
                 onNavigateBack = {
                     navController.popBackStack()
                 }
             )
         }
         composable(
-            route = Screen.Detail.route,
+            route = Screen.Detail.route ,
             arguments = listOf(
-                navArgument("url") { type = NavType.StringType },
+                navArgument("url") { type = NavType.StringType } ,
                 navArgument("type") { type = NavType.StringType }
             )
         ) { backStackEntry ->
@@ -119,14 +119,14 @@ fun MADApp() {
                 runCatching { MediaType.valueOf(typeName) }.getOrDefault(MediaType.Image)
 
             DetailScreen(
-                mediaUrl = url,
-                mediaType = mediaType,
+                mediaUrl = url ,
+                mediaType = mediaType ,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
         composable(Screen.Settings.route) {
             SettingsScreen(
-                settingsViewModel = settingsViewModel,
+                settingsViewModel = settingsViewModel ,
                 onNavigateBack = { navController.popBackStack() }
             )
         }
