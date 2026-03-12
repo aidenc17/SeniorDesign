@@ -25,7 +25,3 @@ data/detected/
 data/test_images/
 data/annotated/
 
-# ignore everything outside PC-to-AWS
-/*
-!/PC-to-AWS/
-!/PC-to-AWS/**
