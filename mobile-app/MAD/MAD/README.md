@@ -14,8 +14,8 @@ To ensure the project runs without issues, verify the following:
 
 ### 2. Device/Emulator Requirements
 
-- **Minimum SDK**: API 29 (Android 10.0).
-- **Target SDK**: API 36 (Android 16).
+
+- **Target SDK**: API 35
 - **Hardware/Feature Support**:
     - **Biometrics**: To access secure features, the device must have biometric hardware (
       fingerprint/face) or a device PIN/Pattern set up.

@@ -24,10 +24,14 @@ class SettingsRepository(context: Context) {
     private val regularUrlKey = stringPreferencesKey("regular_url")
     private val authenticatedUrlKey = stringPreferencesKey("authenticated_url")
 
+    // Default URLs for the project
+    private val defaultRegularUrl = "https://18.224.219.3/public/"
+    private val defaultAuthenticatedUrl = "https://18.224.219.3/private/"
+
     val settingsFlow: Flow<SettingsData> = dataStore.data.map { preferences ->
         SettingsData(
-            regularUrl = preferences[regularUrlKey].orEmpty(),
-            authenticatedUrl = preferences[authenticatedUrlKey].orEmpty()
+            regularUrl = preferences[regularUrlKey] ?: defaultRegularUrl,
+            authenticatedUrl = preferences[authenticatedUrlKey] ?: defaultAuthenticatedUrl
         )
     }
 

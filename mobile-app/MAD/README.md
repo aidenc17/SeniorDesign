@@ -33,7 +33,7 @@
 
 - Android Studio Giraffe (or newer) with the latest Compose tooling
 - JDK 17+
-- Android device/emulator running API 29+ (Android 10.0+)
+- Android device/emulator running API 35 +
 - Gradle 9.1.0
 
 ## Run
