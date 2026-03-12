@@ -29,6 +29,13 @@
 3. Enter new URLs
 4. Tap "Save Settings"
 
+### Prerequisites
+
+- Android Studio Giraffe (or newer) with the latest Compose tooling
+- JDK 17+
+- Android device/emulator running API 29+ (Android 10.0+)
+- Gradle 9.1.0
+
 ## Run
 
 Open the project in Android Studio and run on an emulator or physical device.
