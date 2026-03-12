@@ -74,7 +74,7 @@ PEM_PATH = ""
 REMOTE_DIR = "/srv/media/private"
 
 # Subfolder to watch for incoming images (relative to this script's directory)
-WATCH_SUBDIR = "../../RF-reciever"
+WATCH_SUBDIR = "../RF-reciever"
 
 # Allowed file extensions (images/videos only). Add/remove as needed.
 ALLOWED_EXTENSIONS = {
