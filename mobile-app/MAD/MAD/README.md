@@ -1,6 +1,4 @@
-# MAD (Mobile Access Device)
-
-MAD - Mobile App Development.
+#MAD - Mobile App Development.
 
 ## Requirements to Run
 
