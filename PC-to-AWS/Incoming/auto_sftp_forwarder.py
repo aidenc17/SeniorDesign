@@ -68,7 +68,7 @@ SSH_USER = "ubuntu"
 
 # Path to PEM key. If blank, the script auto-detects a .pem in this folder.
 # If relative, it's resolved from this script's folder.
-# PEM_PATH = ""
+PEM_PATH = ""
 
 # Remote directory on the server where files should be uploaded
 REMOTE_DIR = "/srv/media/private"
@@ -137,30 +137,30 @@ def setup_logging() -> None:
     )
 
 
-# def resolve_pem_path() -> Path:
-#     if PEM_PATH.strip():
-#         pem = Path(PEM_PATH)
-#         if not pem.is_absolute():
-#             pem = BASE_DIR / pem
-#         if not pem.exists():
-#             raise FileNotFoundError(f"PEM key not found at: {pem}")
-#         return pem
-#
-#     candidates = [
-#         path
-#         for path in BASE_DIR.iterdir()
-#         if path.is_file() and path.suffix.lower() == ".pem"
-#     ]
-#     if not candidates:
-#         raise FileNotFoundError(
-#             "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
-#         )
-#     if len(candidates) > 1:
-#         names = ", ".join(sorted(p.name for p in candidates))
-#         raise ValueError(
-#             "Multiple .pem files found. Set PEM_PATH to choose one: " + names
-#         )
-#     return candidates[0]
+ def resolve_pem_path() -> Path:
+     if PEM_PATH.strip():
+         pem = Path(PEM_PATH)
+         if not pem.is_absolute():
+             pem = BASE_DIR / pem
+         if not pem.exists():
+             raise FileNotFoundError(f"PEM key not found at: {pem}")
+         return pem
+
+     candidates = [
+         path
+         for path in BASE_DIR.iterdir()
+         if path.is_file() and path.suffix.lower() == ".pem"
+     ]
+     if not candidates:
+         raise FileNotFoundError(
+             "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
+         )
+     if len(candidates) > 1:
+         names = ", ".join(sorted(p.name for p in candidates))
+         raise ValueError(
+             "Multiple .pem files found. Set PEM_PATH to choose one: " + names
+         )
+     return candidates[0]
 
 
 def validate_config() -> None:
