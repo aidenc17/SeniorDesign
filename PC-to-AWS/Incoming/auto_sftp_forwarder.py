@@ -74,7 +74,7 @@ PEM_PATH = ""
 REMOTE_DIR = "/srv/media/private"
 
 # Subfolder to watch for incoming images (relative to this script's directory)
-WATCH_SUBDIR = "RF_receiver"
+WATCH_SUBDIR = "../../RF-reciever"
 
 # Allowed file extensions (images/videos only). Add/remove as needed.
 ALLOWED_EXTENSIONS = {
@@ -137,30 +137,30 @@ def setup_logging() -> None:
     )
 
 
- def resolve_pem_path() -> Path:
-     if PEM_PATH.strip():
-         pem = Path(PEM_PATH)
-         if not pem.is_absolute():
-             pem = BASE_DIR / pem
-         if not pem.exists():
-             raise FileNotFoundError(f"PEM key not found at: {pem}")
-         return pem
+def resolve_pem_path() -> Path:
+    if PEM_PATH.strip():
+        pem = Path(PEM_PATH)
+        if not pem.is_absolute():
+            pem = BASE_DIR / pem
+        if not pem.exists():
+            raise FileNotFoundError(f"PEM key not found at: {pem}")
+        return pem
 
-     candidates = [
-         path
-         for path in BASE_DIR.iterdir()
-         if path.is_file() and path.suffix.lower() == ".pem"
-     ]
-     if not candidates:
-         raise FileNotFoundError(
-             "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
-         )
-     if len(candidates) > 1:
-         names = ", ".join(sorted(p.name for p in candidates))
-         raise ValueError(
-             "Multiple .pem files found. Set PEM_PATH to choose one: " + names
-         )
-     return candidates[0]
+    candidates = [
+        path
+        for path in BASE_DIR.iterdir()
+        if path.is_file() and path.suffix.lower() == ".pem"
+    ]
+    if not candidates:
+        raise FileNotFoundError(
+            "No .pem key found in script folder. Add your PEM file or set PEM_PATH."
+        )
+    if len(candidates) > 1:
+        names = ", ".join(sorted(p.name for p in candidates))
+        raise ValueError(
+            "Multiple .pem files found. Set PEM_PATH to choose one: " + names
+        )
+    return candidates[0]
 
 
 def validate_config() -> None:
@@ -221,7 +221,7 @@ def cleanup_empty_dirs(base_dir: Path, target_dir: Path) -> None:
 
 
 class SFTPUploader:
-    def __init__(self, host: str, user: str, remote_dir: str):
+    def __init__(self, host: str, user: str, remote_dir: str, pem_path: Path):
         self.host = host
         self.user = user
         self.pem_path = pem_path
@@ -289,14 +289,14 @@ class SFTPUploader:
 
 
 class IncomingHandler(FileSystemEventHandler):
-    def __init__(self, uploader: SFTPUploader) -> None:
+    def __init__(self, uploader: SFTPUploader, pem_name: str = "") -> None:
         super().__init__()
         self.uploader = uploader
         self.last_seen: dict[str, float] = {}
         self.exclude_names = set(EXCLUDE_NAMES)
         self.exclude_names.add(Path(__file__).name)
-         if pem_name:
-             self.exclude_names.add(pem_name)
+        if pem_name:
+            self.exclude_names.add(pem_name)
 
     def on_created(self, event) -> None:
         self._handle_event(event)
@@ -360,6 +360,7 @@ class IncomingHandler(FileSystemEventHandler):
             try:
                 self.uploader.connect()
                 self.uploader.upload_and_verify(local_path, relative_path)
+                # Delete the local file after successful upload
                 local_path.unlink()
                 logging.info("Uploaded and removed: %s", local_path)
                 return
@@ -384,7 +385,7 @@ def main() -> None:
     setup_logging()
     try:
         validate_config()
-         pem_path = resolve_pem_path()
+        pem_path = resolve_pem_path()
     except Exception as exc:
         request_exit("Configuration error", exc)
         return
@@ -393,8 +394,8 @@ def main() -> None:
         logging.info("Creating watch folder: %s", WATCH_DIR)
         WATCH_DIR.mkdir(parents=True, exist_ok=True)
 
-    uploader = SFTPUploader(AWS_HOST, SSH_USER, REMOTE_DIR)
-    handler = IncomingHandler(uploader)
+    uploader = SFTPUploader(AWS_HOST, SSH_USER, REMOTE_DIR, pem_path)
+    handler = IncomingHandler(uploader, pem_name=pem_path.name)
 
     observer = Observer()
     observer.schedule(handler, str(WATCH_DIR), recursive=False)
