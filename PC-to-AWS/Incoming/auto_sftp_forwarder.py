@@ -384,7 +384,7 @@ def main() -> None:
     setup_logging()
     try:
         validate_config()
-        # pem_path = resolve_pem_path()
+         pem_path = resolve_pem_path()
     except Exception as exc:
         request_exit("Configuration error", exc)
         return
