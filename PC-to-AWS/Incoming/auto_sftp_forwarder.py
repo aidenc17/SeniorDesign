@@ -224,7 +224,7 @@ class SFTPUploader:
     def __init__(self, host: str, user: str, remote_dir: str):
         self.host = host
         self.user = user
-        # self.pem_path = pem_path
+        self.pem_path = pem_path
         self.remote_dir = remote_dir
         self.client = None
         self.sftp = None
@@ -237,7 +237,7 @@ class SFTPUploader:
         client.connect(
             self.host,
             username=self.user,
-            # key_filename=str(self.pem_path),
+            key_filename=str(self.pem_path),
             allow_agent=True,
             look_for_keys=True,
             timeout=10,
@@ -295,8 +295,8 @@ class IncomingHandler(FileSystemEventHandler):
         self.last_seen: dict[str, float] = {}
         self.exclude_names = set(EXCLUDE_NAMES)
         self.exclude_names.add(Path(__file__).name)
-        # if pem_name:
-        #     self.exclude_names.add(pem_name)
+         if pem_name:
+             self.exclude_names.add(pem_name)
 
     def on_created(self, event) -> None:
         self._handle_event(event)
