@@ -1,8 +1,5 @@
 import os
-import numpy as np
-import cv2
 import PIL
-from cv2 import *
 from PIL import Image
 
 CHUNK_SIZE = 60  # bytes (small on purpose; want to try v small first)
@@ -36,11 +33,11 @@ if __name__ == "__main__":
     else:
         pieces = split_file_into_chunks(test_file)
         
-        print("File:", test_file)
+        print("file:", test_file)
         print("chunk size:", CHUNK_SIZE)
 
         print("total chunks:", len(pieces))
 
         # printing the first few chunks for testing/seeing what it's doing
         for i in range(min(3, len(pieces))):
-            print(f"Chunk {i} length:", len(pieces[i]))
+            print(f"chunk {i} length:", len(pieces[i]))
