@@ -51,7 +51,7 @@ def init_rfm69():
     # these are guesses, am not very familiar with radio wiring 
     spi = busio.SPI(board.SCK, MOSI=board.MOSI, MISO=board.MISO)
     cs = digitalio.DigitalInOut(board.CE1)      # may adjust if wiring uses different CS pin
-    reset = digitalio.DigitalInOut(board.D25)   # may adjust if wiring uses different reset pin
+    reset = digitalio.DigitalInOut(board.D17)   # may adjust if wiring uses different reset pin
 
     rfm69 = adafruit_rfm69.RFM69(spi, cs, reset, 915.0)
     return rfm69
