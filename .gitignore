@@ -24,4 +24,4 @@ test_images/
 data/detected/
 data/test_images/
 data/annotated/
-
+*.zip
