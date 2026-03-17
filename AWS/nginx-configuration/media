@@ -1,3 +1,12 @@
+# Example Nginx config for /etc/nginx/sites-available/media
+# --------------------------------------------------------------------
+# This file is provided as a commented example. To use it:
+#   1. Copy or symlink it to /etc/nginx/sites-available/media
+#   2. Uncomment the server blocks below (remove the leading "#" chars)
+#   3. Enable the site and reload Nginx
+#
+# Until you uncomment the server blocks, this configuration will do nothing.
+#
 #server {
 #    listen 8080;
 #    server_name _;
