@@ -2,3 +2,8 @@
 opencv-python==4.9.0.80
 numpy==1.26.4
 
+# sender.py & RF communication
+adafruit-circuitpython-rfm69==2.1.28
+adafruit-blinka==8.20.0
+setuptools>=65.0.0
+pyserial>=3.5

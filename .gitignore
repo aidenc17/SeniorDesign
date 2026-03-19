@@ -25,3 +25,6 @@ data/detected/
 data/test_images/
 data/annotated/
 *.zip
+
+# logs 
+pipeline_log
