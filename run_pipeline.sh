@@ -87,12 +87,30 @@ fi
 ZIP_SIZE=$(du -h "$DETECTED_IMAGES_ZIP" | cut -f1)
 echo -e "${GREEN} ZIP file created: $DETECTED_IMAGES_ZIP ($ZIP_SIZE)${NC}"
 
-# TODO: running transmission scripts
+
 # step 3: running transmission scripts
+echo -e "\n${YELLOW}${NC} Running RF sender..."
+
+SENDER_SCRIPT="$SCRIPT_DIR/RF-sender/sender.py"
+echo "Script: $SENDER_SCRIPT"
+echo "---"
+
+if [ ! -f "$SENDER_SCRIPT" ]; then
+    echo -e "${RED}ERROR: Sender script not found: $SENDER_SCRIPT${NC}"
+    exit 1
+fi
+
+# run sender script
+if python3 "$SENDER_SCRIPT"; then
+    echo -e "${GREEN} RF sender completed successfully${NC}"
+else
+    echo -e "${RED} RF sender script failed${NC}"
+    exit 1
+fi
 
 
-# TODO: running AWS upload script
-# step 4: run toms python AWS 
+# step 4: running AWS upload script
+echo -e "\n${YELLOW}[STEP 3/3]${NC} AWS upload (TODO)${NC}"
 
 
 # pipeline complete
