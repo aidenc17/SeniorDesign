@@ -24,10 +24,10 @@ def generate_image_list(images_dir="../received_images", output_file="images.jso
     images = []
     
     for file in sorted(images_path.iterdir()):
-        # ✅ ONLY grab PNG files
+        # ONLY grab PNG files
         if file.suffix.lower() == ".png":
 
-            # 🔥 sanitize filename (remove spaces & weird chars)
+            # sanitize filename (remove spaces & weird chars)
             clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file.name)
             new_path = file.with_name(clean_name)
 
@@ -60,7 +60,7 @@ def generate_image_list(images_dir="../received_images", output_file="images.jso
     with open(output_path, 'w') as f:
         json.dump(metadata, f, indent=2)
     
-    print(f"✓ Generated image list: {output_path.absolute()}")
+    print(f" Generated image list: {output_path.absolute()}")
     print(f"  Found {len(images)} PNG images")
     for img in images:
         print(f"  - {img['filename']} ({img['size_kb']} KB)")

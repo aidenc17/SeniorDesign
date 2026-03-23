@@ -1,14 +1,10 @@
-const RECEIVED_IMAGES_PATH = '../received_images/';
-
 // load and display images
 async function loadImages() {
     const gallery = document.getElementById('imageGallery');
     const imageCount = document.getElementById('imageCount');
     
     try {
-        // get list of images from the received_images folder
-        // since we can't list directory contents directly in browser,
-        // we'll try to load images by expected filenames
+        // Load actual image list from JSON (no guessing)
         const images = await findAvailableImages();
         
         if (images.length === 0) {
@@ -36,38 +32,12 @@ async function loadImages() {
     }
 }
 
-// attempt to find available images
+// get images directly from images.json
 async function findAvailableImages() {
-    const possibleImages = [];
-    
-    //common naming patterns
-    const patterns = [
-        // Pattern 1: image1.png, image2.png, etc.
-        ...Array.from({length: 50}, (_, i) => `image${i + 1}.png`),
-        // Pattern 2: circle 1.png, circle 2.png, etc.
-        ...Array.from({length: 20}, (_, i) => `circle ${i + 1}.png`)
-    ];
-    
-    const foundImages = [];
-    
-    for (const filename of patterns) {
-        const path = RECEIVED_IMAGES_PATH + filename;
-        if (await imageExists(path)) {
-            foundImages.push(path);
-        }
-    }
-    
-    return foundImages;
-}
+    const response = await fetch("images.json?t=" + Date.now()); // prevent caching
+    const data = await response.json();
 
-// check if image exists
-function imageExists(url) {
-    return new Promise((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve(true);
-        img.onerror = () => resolve(false);
-        img.src = url;
-    });
+    return data.images.map(img => img.path);
 }
 
 // creates image card element
@@ -85,7 +55,7 @@ function createImageCard(imagePath, index) {
         </div>
     `;
     
-    // Click to view full size
+    // click to view full size
     card.addEventListener('click', () => {
         window.open(imagePath, '_blank');
     });

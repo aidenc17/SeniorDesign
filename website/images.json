@@ -1,59 +1,52 @@
 {
-  "generated": "2026-03-23T14:00:10.692385",
-  "total_images": 11,
+  "generated": "2026-03-23T14:22:37.739037",
+  "total_images": 10,
   "images": [
     {
-      "filename": "brownsDawg.png",
-      "path": "../received_images/brownsDawg.png",
-      "size": 113516,
-      "size_kb": 110.86,
-      "modified": "2026-03-19T08:21:54.349227"
-    },
-    {
-      "filename": "circle 10.png",
-      "path": "../received_images/circle 10.png",
+      "filename": "circle_10.png",
+      "path": "../received_images/circle_10.png",
       "size": 7057,
       "size_kb": 6.89,
       "modified": "2026-03-19T08:21:54.349435"
     },
     {
-      "filename": "circle 4.png",
-      "path": "../received_images/circle 4.png",
+      "filename": "circle_4.png",
+      "path": "../received_images/circle_4.png",
       "size": 6755,
       "size_kb": 6.6,
       "modified": "2026-03-19T08:21:54.349580"
     },
     {
-      "filename": "circle 5.png",
-      "path": "../received_images/circle 5.png",
+      "filename": "circle_5.png",
+      "path": "../received_images/circle_5.png",
       "size": 7809,
       "size_kb": 7.63,
       "modified": "2026-03-19T08:21:54.349724"
     },
     {
-      "filename": "circle 6.png",
-      "path": "../received_images/circle 6.png",
+      "filename": "circle_6.png",
+      "path": "../received_images/circle_6.png",
       "size": 6725,
       "size_kb": 6.57,
       "modified": "2026-03-19T08:21:54.349873"
     },
     {
-      "filename": "circle 7.png",
-      "path": "../received_images/circle 7.png",
+      "filename": "circle_7.png",
+      "path": "../received_images/circle_7.png",
       "size": 5841,
       "size_kb": 5.7,
       "modified": "2026-03-19T08:21:54.350024"
     },
     {
-      "filename": "circle 8.png",
-      "path": "../received_images/circle 8.png",
+      "filename": "circle_8.png",
+      "path": "../received_images/circle_8.png",
       "size": 5866,
       "size_kb": 5.73,
       "modified": "2026-03-19T08:21:54.350170"
     },
     {
-      "filename": "circle 9.png",
-      "path": "../received_images/circle 9.png",
+      "filename": "circle_9.png",
+      "path": "../received_images/circle_9.png",
       "size": 5851,
       "size_kb": 5.71,
       "modified": "2026-03-19T08:21:54.350319"
