@@ -13,10 +13,22 @@ PORT = 8000
 WEBSITE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class CustomHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):
-    """Custom handler to serve files from the website directory"""
+    """Custom handler to serve files from the website directory and received_images"""
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=WEBSITE_DIR, **kwargs)
+
+    def translate_path(self, path):
+        """
+        Map /received_images/* URL to ../received_images folder
+        """
+        if path.startswith("/received_images/"):
+            rel_path = path.replace("/received_images/", "")
+            return os.path.abspath(
+                os.path.join(WEBSITE_DIR, "../received_images", rel_path)
+            )
+        
+        return super().translate_path(path)
     
     def end_headers(self):
         # add CORS headers to allow image loading
