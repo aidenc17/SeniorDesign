@@ -43,9 +43,9 @@ async function findAvailableImages() {
     //common naming patterns
     const patterns = [
         // Pattern 1: image1.png, image2.png, etc.
-        ...Array.from({length: 20}, (_, i) => `image${i + 1}.png`),
+        ...Array.from({length: 50}, (_, i) => `image${i + 1}.png`),
         // Pattern 2: circle 1.png, circle 2.png, etc.
-        ...Array.from({length: 20}, (_, i) => `circle${i + 1}.png`)
+        ...Array.from({length: 20}, (_, i) => `circle ${i + 1}.png`)
     ];
     
     const foundImages = [];

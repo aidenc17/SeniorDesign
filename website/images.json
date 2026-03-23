@@ -1,0 +1,83 @@
+{
+  "generated": "2026-03-19T12:03:25.023858",
+  "total_images": 11,
+  "images": [
+    {
+      "filename": "brownsDawg.png",
+      "path": "../received_images/brownsDawg.png",
+      "size": 113516,
+      "size_kb": 110.86,
+      "modified": "2026-03-19T08:21:54.349227"
+    },
+    {
+      "filename": "circle 10.png",
+      "path": "../received_images/circle 10.png",
+      "size": 7057,
+      "size_kb": 6.89,
+      "modified": "2026-03-19T08:21:54.349435"
+    },
+    {
+      "filename": "circle 4.png",
+      "path": "../received_images/circle 4.png",
+      "size": 6755,
+      "size_kb": 6.6,
+      "modified": "2026-03-19T08:21:54.349580"
+    },
+    {
+      "filename": "circle 5.png",
+      "path": "../received_images/circle 5.png",
+      "size": 7809,
+      "size_kb": 7.63,
+      "modified": "2026-03-19T08:21:54.349724"
+    },
+    {
+      "filename": "circle 6.png",
+      "path": "../received_images/circle 6.png",
+      "size": 6725,
+      "size_kb": 6.57,
+      "modified": "2026-03-19T08:21:54.349873"
+    },
+    {
+      "filename": "circle 7.png",
+      "path": "../received_images/circle 7.png",
+      "size": 5841,
+      "size_kb": 5.7,
+      "modified": "2026-03-19T08:21:54.350024"
+    },
+    {
+      "filename": "circle 8.png",
+      "path": "../received_images/circle 8.png",
+      "size": 5866,
+      "size_kb": 5.73,
+      "modified": "2026-03-19T08:21:54.350170"
+    },
+    {
+      "filename": "circle 9.png",
+      "path": "../received_images/circle 9.png",
+      "size": 5851,
+      "size_kb": 5.71,
+      "modified": "2026-03-19T08:21:54.350319"
+    },
+    {
+      "filename": "image13.png",
+      "path": "../received_images/image13.png",
+      "size": 7690,
+      "size_kb": 7.51,
+      "modified": "2026-03-19T08:21:54.350517"
+    },
+    {
+      "filename": "image35.png",
+      "path": "../received_images/image35.png",
+      "size": 5828,
+      "size_kb": 5.69,
+      "modified": "2026-03-19T08:21:54.350764"
+    },
+    {
+      "filename": "image9.png",
+      "path": "../received_images/image9.png",
+      "size": 7047,
+      "size_kb": 6.88,
+      "modified": "2026-03-19T08:21:54.350968"
+    }
+  ]
+}
