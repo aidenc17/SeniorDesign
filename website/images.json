@@ -1,0 +1,76 @@
+{
+  "generated": "2026-03-23T14:22:37.739037",
+  "total_images": 10,
+  "images": [
+    {
+      "filename": "circle_10.png",
+      "path": "../received_images/circle_10.png",
+      "size": 7057,
+      "size_kb": 6.89,
+      "modified": "2026-03-19T08:21:54.349435"
+    },
+    {
+      "filename": "circle_4.png",
+      "path": "../received_images/circle_4.png",
+      "size": 6755,
+      "size_kb": 6.6,
+      "modified": "2026-03-19T08:21:54.349580"
+    },
+    {
+      "filename": "circle_5.png",
+      "path": "../received_images/circle_5.png",
+      "size": 7809,
+      "size_kb": 7.63,
+      "modified": "2026-03-19T08:21:54.349724"
+    },
+    {
+      "filename": "circle_6.png",
+      "path": "../received_images/circle_6.png",
+      "size": 6725,
+      "size_kb": 6.57,
+      "modified": "2026-03-19T08:21:54.349873"
+    },
+    {
+      "filename": "circle_7.png",
+      "path": "../received_images/circle_7.png",
+      "size": 5841,
+      "size_kb": 5.7,
+      "modified": "2026-03-19T08:21:54.350024"
+    },
+    {
+      "filename": "circle_8.png",
+      "path": "../received_images/circle_8.png",
+      "size": 5866,
+      "size_kb": 5.73,
+      "modified": "2026-03-19T08:21:54.350170"
+    },
+    {
+      "filename": "circle_9.png",
+      "path": "../received_images/circle_9.png",
+      "size": 5851,
+      "size_kb": 5.71,
+      "modified": "2026-03-19T08:21:54.350319"
+    },
+    {
+      "filename": "image13.png",
+      "path": "../received_images/image13.png",
+      "size": 7690,
+      "size_kb": 7.51,
+      "modified": "2026-03-19T08:21:54.350517"
+    },
+    {
+      "filename": "image35.png",
+      "path": "../received_images/image35.png",
+      "size": 5828,
+      "size_kb": 5.69,
+      "modified": "2026-03-19T08:21:54.350764"
+    },
+    {
+      "filename": "image9.png",
+      "path": "../received_images/image9.png",
+      "size": 7047,
+      "size_kb": 6.88,
+      "modified": "2026-03-19T08:21:54.350968"
+    }
+  ]
+}
