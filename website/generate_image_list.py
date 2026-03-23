@@ -6,16 +6,13 @@ This allows the website to load images without knowing their names in advance
 
 import os
 import json
+import re
 from pathlib import Path
 from datetime import datetime
 
 def generate_image_list(images_dir="../received_images", output_file="images.json"):
     """
     Scan received_images folder and create JSON file with image metadata
-    
-    Args:
-        images_dir: Path to received images folder
-        output_file: Output JSON file path
     """
     # Get absolute path
     images_path = Path(images_dir).resolve()
@@ -24,18 +21,27 @@ def generate_image_list(images_dir="../received_images", output_file="images.jso
         print(f"ERROR: Directory not found: {images_path}")
         return
     
-    # Find all image files
-    image_extensions = ['.png', '.jpg', '.jpeg', '.gif', '.bmp']
     images = []
     
     for file in sorted(images_path.iterdir()):
-        if file.suffix.lower() in image_extensions:
+        # ✅ ONLY grab PNG files
+        if file.suffix.lower() == ".png":
+
+            # 🔥 sanitize filename (remove spaces & weird chars)
+            clean_name = re.sub(r'[^a-zA-Z0-9_.-]', '_', file.name)
+            new_path = file.with_name(clean_name)
+
+            # rename file if needed
+            if file.name != clean_name:
+                file.rename(new_path)
+                file = new_path  # update reference
+
             # Get file info
             stat = file.stat()
             
             image_info = {
                 "filename": file.name,
-                "path": f"../received_images/{file.name}",
+                "path": f"../received_images/{file.name}",  # keep your original format
                 "size": stat.st_size,
                 "size_kb": round(stat.st_size / 1024, 2),
                 "modified": datetime.fromtimestamp(stat.st_mtime).isoformat()
@@ -55,7 +61,7 @@ def generate_image_list(images_dir="../received_images", output_file="images.jso
         json.dump(metadata, f, indent=2)
     
     print(f"✓ Generated image list: {output_path.absolute()}")
-    print(f"  Found {len(images)} images")
+    print(f"  Found {len(images)} PNG images")
     for img in images:
         print(f"  - {img['filename']} ({img['size_kb']} KB)")
 
