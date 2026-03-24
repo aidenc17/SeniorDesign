@@ -7,24 +7,45 @@ function showTab(tabId) {
 }
 
 // AUTHENTICATION
-async function authenticate() {
+let currentToken = null;
+
+// STEP 1: LOGIN
+async function login() {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
+
+    const res = await fetch("/login", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, password })
+    });
+
+    if (res.ok) {
+        const data = await res.json();
+        currentToken = data.token;
+
+        alert("Token generated:\n" + currentToken);
+    } else {
+        alert("Login failed");
+    }
+}
+
+// STEP 2: VERIFY
+async function authenticate() {
+    const username = document.getElementById("username").value;
     const token = document.getElementById("token").value;
 
-    const res = await fetch("/auth", {
+    const res = await fetch("/verify", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password, token })
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ username, token })
     });
 
     if (res.ok) {
         document.getElementById("obiwanVideo").style.display = "block";
-        document.getElementById("authSection").style.display = "none";
+        alert("Access granted.");
     } else {
-        alert("Access denied.");
+        alert("Invalid or expired token.");
     }
 }
 
