@@ -30,7 +30,8 @@ from rfm69_transfer.shared.chunking import (
     is_control_packet,
     END_PAYLOAD,
     DONE_PAYLOAD,
-    COMPLETE_PAYLOAD
+    MD5OKAY_PAYLOAD,
+    RESENDALL_PAYLOAD
 )
 
 
@@ -63,8 +64,8 @@ def init_rfm69():
     rfm69 = adafruit_rfm69.RFM69(spi, cs, reset, 915.0)
 
     # making it go faster and more powerful
-    rfm69.bitrate = 50000
-    rfm69.rx_bw = 125000
+    rfm69.bitrate = 100000
+    rfm69.rx_bw = 250000
     rfm69.tx_power = 18
 
     # encryption 
@@ -95,7 +96,7 @@ def receive_chunks_sim(chunk_file):
     return data
 
 # timeout currently set at 300 seconds just for testing, can adjust up or down after testing
-def receive_start_header_rfm69(rfm69, timeout=300.0):
+def receive_start_header_rfm69(rfm69, timeout=700.0):
 
     print("waiting for START header over radio.")
 
@@ -143,8 +144,8 @@ def receive_chunks_rfm69(rfm69, total_chunks, chunk_size, timeout=5.0):
                 missing = [i for i in range(total_chunks) if i not in received_chunks]
 
                 if len(missing) == 0:
-                    print("no missing chunks, sending COMPLETE")
-                    complete_packet = make_control_packet(COMPLETE_PAYLOAD)
+                    print("no missing chunks")
+                    return received_chunks
 
                     # sending a few times for safety; stuff gets dropped a lot
                     for _ in range(3):
@@ -219,17 +220,6 @@ def rebuild_zip_from_bytes(received_chunks, total_chunks, received_zip):
 
 
 def verify_and_extract(received_zip, expected_md5, out_folder):
-    received_md5 = md5_file(received_zip)
-
-    print("Received MD5:", received_md5)
-    print("Expected MD5:", expected_md5)
-
-    # informing if md5 indicates lost data
-    if received_md5 == expected_md5:
-        print("MD5 MATCH")
-    else:
-        print("MD5 MISMATCH (file corrupted or incomplete)")
-        return
 
     os.makedirs(out_folder, exist_ok=True)
 
@@ -247,6 +237,8 @@ def verify_and_extract(received_zip, expected_md5, out_folder):
                 print(file, "-", im.format, im.size)
 
 # TO DO: send md5 checksum back to sender pi
+
+
 
 # change mode to "rfm69" when doing actual radio testing; sim is for non-radio simulation
 # filenames, etc. can be changed to match other code if necessary
@@ -291,6 +283,28 @@ def receiver(chunk_file=CHUNK_FILE, received_zip="detected_images.zip",
 
             if not success:
                 print("couldnt rebuilt zip correctly")
+                return
+                
+            received_md5 = md5_file(received_zip)
+            expected_md5 = header_info["md5"]
+            
+            print("Received MD5:", received_md5)
+            print("Expected MD5:", expected_md5)
+
+            # informing if md5 indicates lost data
+            if received_md5 == expected_md5:
+                print("MD5 MATCH")
+                ok_packet = make_control_packet(MD5OKAY_PAYLOAD)
+                for _ in range(5):
+                    rfm69.send(ok_packet)
+                    time.sleep(0.1)
+            else:
+                print("MD5 MISMATCH (file corrupted or incomplete), sending request to resend")
+                resend_packet = make_control_packet(RESENDALL_PAYLOAD)
+
+                for _ in range(5):
+                    rfm69.send(resend_packet)
+                    time.sleep(0.1)
                 return
 
         except Exception as e:
