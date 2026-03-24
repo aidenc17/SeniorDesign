@@ -21,7 +21,8 @@ from rfm69_transfer.shared.chunking import (
     is_control_packet, 
     END_PAYLOAD,
     DONE_PAYLOAD,
-    COMPLETE_PAYLOAD
+    MD5OKAY_PAYLOAD,
+    RESENDALL_PAYLOAD
 )
 
 
@@ -62,8 +63,8 @@ def init_rfm69():
     rfm69 = adafruit_rfm69.RFM69(spi, cs, reset, 915.0)
     
     # making it go faster and more powerful
-    rfm69.bitrate = 50000
-    rfm69.rx_bw = 125000
+    rfm69.bitrate = 100000
+    rfm69.rx_bw = 250000
     rfm69.tx_power = 18
 
     # both sender and receiver have this encryption key
@@ -178,7 +179,7 @@ def send_selected_chunks(chunks, chunk_numbers, rfm69, max_retries=10):
                 if seq_num % 50 == 0:
                     print("chunk ", seq_num, "ACK received")
                 # needs to give receiver a little time to process the packet before trying to send the next one
-                time.sleep(0.09)
+                time.sleep(0.03)
                 break
             
         if not success:
@@ -208,7 +209,7 @@ def send_chunks_rfm69(chunks, rfm69, max_rounds=5):
         
         start_time = time.time()
         
-        while time.time() - start_time < 10:
+        while time.time() - start_time < 7:
             packet = rfm69.receive(timeout=1.0)
             
             if packet is None:
@@ -225,10 +226,14 @@ def send_chunks_rfm69(chunks, rfm69, max_rounds=5):
                 
             if not is_control_packet(seq_num):
                 continue
+
+            if payload == MD5OKAY_PAYLOAD:
+                print("receiver confirmed md5 match")
+                return True
+            
+            if payload == RESENDALL_PAYLOAD:
+                print("receiver requested full resend")
                 
-            if payload == COMPLETE_PAYLOAD:
-                got_complete = True
-                break 
 
             if payload == DONE_PAYLOAD:
                 got_done = True
@@ -240,6 +245,8 @@ def send_chunks_rfm69(chunks, rfm69, max_rounds=5):
                 
         if got_complete:
             print("receiever says transfer is complete")
+            print("waiting to receive md5 confirmation...")
+            
             return True
             
         if not got_done:

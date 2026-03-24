@@ -7,6 +7,8 @@ CHUNK_SIZE = 57  # bytes (small on purpose; need to be under 60 bytes as that's 
 CONTROL_SEQ = 65535
 
 
+
+
 def split_file_into_chunks(filename):
     chunks = []
 
@@ -43,7 +45,8 @@ def parse_radio_packet(packet):
     
 END_PAYLOAD = b"END"
 DONE_PAYLOAD = b"DONE"
-COMPLETE_PAYLOAD = b"COMPLETE"
+MD5OKAY_PAYLOAD = b"MD5OKAY"
+RESENDALL_PAYLOAD = b'RESENDALL'
 
 # b"M" = 1 byte, count = 1 byte, each seq = 2 bytes, and max payload is 57 bytes
 # so, 1+1+2*n <=57 is n <= 27
