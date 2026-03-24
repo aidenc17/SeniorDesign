@@ -8,7 +8,7 @@ import json
 PORT = 8000
 WEBSITE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-# 🔐 USERS DATABASE (expandable)
+# USERS DATABASE (expandable)
 USERS = {
     "obiwan": {
         "password": "helloThere",
