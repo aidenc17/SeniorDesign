@@ -14,20 +14,58 @@
             <p class="subtitle">Classified Intelligence Report</p>
         </header>
 
+        <!-- Tabs -->
+        <div class="tabs">
+            <button onclick="showTab('imagesTab')">Images</button>
+            <button onclick="showTab('videoTab')">Public Transmission</button>
+            <button onclick="showTab('obiwanTab')">Obi-Wan Access</button>
+        </div>
+
         <main>
-            <div class="status-bar">
-                <span class="status-label">Status:</span>
-                <span class="status-value" id="imageCount">Loading images...</span>
+            <!-- IMAGES TAB -->
+            <div id="imagesTab" class="tab-content">
+                <div class="status-bar">
+                    <span class="status-label">Status:</span>
+                    <span class="status-value" id="imageCount">Loading images...</span>
+                </div>
+
+                <div class="gallery" id="imageGallery"></div>
             </div>
 
-            <div class="gallery" id="imageGallery">
-                <!-- images will be loaded here dynamically -->
+            <!-- PUBLIC VIDEO TAB -->
+            <div id="videoTab" class="tab-content" style="display:none;">
+                <h2>Public Transmission</h2>
+                <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/F2sERCgDESE"
+                    frameborder="0" allowfullscreen>
+                </iframe>
+            </div>
+
+            <!-- OBI-WAN TAB -->
+            <div id="obiwanTab" class="tab-content" style="display:none;">
+                <h2>Restricted Jedi Transmission</h2>
+
+                <div id="authSection">
+                    <input type="text" id="username" placeholder="Username"><br><br>
+                    <input type="password" id="password" placeholder="Password"><br><br>
+                    <input type="text" id="token" placeholder="Personal Access Token"><br><br>
+                    <button onclick="authenticate()">Authenticate</button>
+                    <button onclick="login()">Get Token</button>
+                    <button onclick="authenticate()">Use Token</button>
+                </div>
+
+                <div id="obiwanVideo" style="display:none;">
+                    <h3>Access Granted</h3>
+                    <iframe width="560" height="315"
+                        src="https://www.youtube.com/embed/zGwszApFEcY"
+                        frameborder="0" allowfullscreen>
+                    </iframe>
+                </div>
             </div>
 
             <div class="message-section">
                 <h2>Transmission Message</h2>
-                <div class="message-box">
-                </div>
+                <div class="message-box"></div>
             </div>
         </main>
 

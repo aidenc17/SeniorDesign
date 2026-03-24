@@ -108,11 +108,6 @@ else
     exit 1
 fi
 
-
-# step 4: running AWS upload script
-echo -e "\n${YELLOW}[STEP 3/3]${NC} AWS upload (TODO)${NC}"
-
-
 # pipeline complete
 echo -e "\n${BLUE}======================================${NC}"
 echo -e "${GREEN}Pipeline completed successfully!${NC}"
