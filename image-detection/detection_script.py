@@ -123,7 +123,7 @@ def find_usb_folder(folder_name="test_images"):
 
 def main(): 
     # now only look for Raspberry Pi folder
-    input_folder = "/media/raspberrypi/BOOTS"
+    input_folder = "/media/raspberrypi/"
     output_folder = OUTPUT_FOLDER
     
     print(f"Looking for images in: {input_folder}")
