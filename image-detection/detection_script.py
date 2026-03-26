@@ -3,7 +3,8 @@ import numpy as np
 import os
 import shutil
 from pathlib import Path
-import platform
+
+OUTPUT_FOLDER = "detected_images"
 
 def detect_red_circle(image_path):
     image = cv2.imread(image_path)
@@ -75,72 +76,51 @@ def load_image(image_path):
         raise FileNotFoundError(f"Image not found at path: {image_path}")
     return image
 
-def find_usb_folder(folder_name="test_images"):
+def find_all_images(root_path):
     """
-    search for a USB drive and look for a specific folder on it.
-    in order this : mac (/Volumes/), raspberry pi (/media/), windows (D:, E:, F:, G:) 
+    Recursively search for all image files (.png, .jpg, .jpeg) in a directory tree.
+    Returns a list of full file paths.
     """
-    system = platform.system()
-    search_paths = []
+    image_extensions = ('.png', '.jpg', '.jpeg')
+    image_files = []
     
-    if system == "Darwin":  # macs
-        search_paths = ["/Volumes"]
-    elif system == "Linux":  # raspberry pis
-        search_paths = ["/media/raspberrypi/", "/media"] 
-    elif system == "Windows":
-        # checking windows usb letters
-        search_paths = [f"{letter}:" for letter in "DEFGHI" if os.path.exists(f"{letter}:")]
+    print(f"Searching for images in: {root_path}")
     
-    print(f"Searching for USB in {search_paths}...")
+    for dirpath, dirnames, filenames in os.walk(root_path):
+        for filename in filenames:
+            if filename.lower().endswith(image_extensions):
+                full_path = os.path.join(dirpath, filename)
+                image_files.append(full_path)
+                print(f"  Found: {filename}")
     
-    # mac and linux searches in directories
-    if system in ["Darwin", "Linux"]:
-        for volumes_path in search_paths:
-            if not os.path.exists(volumes_path):
-                continue
-            
-            for volume in os.listdir(volumes_path):
-                volume_path = os.path.join(volumes_path, volume)
-                
-                if not os.path.isdir(volume_path):
-                    continue
-                
-                target_path = os.path.join(volume_path, folder_name)
-                if os.path.isdir(target_path):
-                    print(f"Found '{folder_name}' at: {target_path}")
-                    return target_path
-    
-    # checking windows drives
-    elif system == "Windows":
-        for drive in search_paths:
-            target_path = os.path.join(drive, folder_name)
-            if os.path.isdir(target_path):
-                print(f"Found '{folder_name}' at: {target_path}")
-                return target_path
-    
-    print(f"✗ Could not find USB with '{folder_name}' folder")
-    return None
+    return image_files
 
 def main(): 
-    # now only look for Raspberry Pi folder
-    input_folder = "/media/raspberrypi/`31 GB Volume`/test_images" # TODO: fix this bullshit
+    # Search for Raspberry Pi USB
+    usb_root = "/media/raspberrypi"
     output_folder = OUTPUT_FOLDER
     
-    print(f"Looking for images in: {input_folder}")
+    print(f"Looking for USB at: {usb_root}\n")
     
-    if not os.path.exists(input_folder):
-        print(f"ERROR: Raspberry Pi folder not found at {input_folder}")
+    if not os.path.exists(usb_root):
+        print(f"ERROR: USB not found at {usb_root}")
         return
+    
+    # Find all images recursively
+    image_files = find_all_images(usb_root)
+    
+    if not image_files:
+        print("ERROR: No images found on USB")
+        return
+    
+    print(f"\nFound {len(image_files)} total images\n")
     
     Path(output_folder).mkdir(parents=True, exist_ok=True)
     
-    image_files = [f for f in os.listdir(input_folder) if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-    print(f"Found {len(image_files)} images\n")
-    
     detected_count = 0
     
-    for filename in image_files:
-        image_path = os.path.join(input_folder, filename)
+    for image_path in image_files:
+        filename = os.path.basename(image_path)
         
         try:
             image = load_image(image_path)
@@ -166,5 +146,4 @@ def main():
     print(f"Created zip file: {zip_path}")
 
 if __name__ == "__main__":
-    OUTPUT_FOLDER = "detected_images"
     main()
