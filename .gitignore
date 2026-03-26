@@ -2,7 +2,6 @@
 venv/
 ENV/
 
-
 # python files
 __pycache__/
 *.pyc
@@ -20,7 +19,6 @@ __pycache__/
 
 # image detection outputs
 detected_images/
-
 data/detected/
 data/test_images/
 data/annotated/
