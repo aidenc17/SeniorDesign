@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death Star Vulnerability Analysis</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+
+    <div class="container">
+        <header>
+            <div class="header-badge">CLASSIFIED</div>
+            <h1>Death Star<br>Vulnerability Analysis</h1>
+            <p class="subtitle">— Rebel Alliance Intelligence Dossier —</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn" onclick="showTab('imagesTab', this)">[ Images ]</button>
+            <button class="tab-btn" onclick="showTab('videoTab', this)">[ Transmission ]</button>
+            <button class="tab-btn" onclick="showTab('obiwanTab', this)">[ Obi-Wan Access ]</button>
+        </div>
+
+        <main>
+            <!-- IMAGES TAB -->
+            <div id="imagesTab" class="tab-content">
+                <div class="status-bar">
+                    <span class="status-label">STATUS&nbsp;&gt;</span>
+                    <span class="status-value" id="imageCount">Scanning...</span>
+                </div>
+                <div class="gallery" id="imageGallery"></div>
+            </div>
+
+            <!-- VIDEO TAB -->
+            <div id="videoTab" class="tab-content" style="display:none;">
+                <div class="panel">
+                    <h2 class="panel-title">Public Transmission</h2>
+                    <div class="video-wrap">
+                        <iframe width="560" height="315"
+                            src="https://www.youtube.com/embed/F2sERCgDESE"
+                            frameborder="0" allowfullscreen>
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- OBI-WAN TAB -->
+            <div id="obiwanTab" class="tab-content" style="display:none;">
+                <div class="panel">
+                    <h2 class="panel-title">Restricted Jedi Transmission</h2>
+
+                    <div id="authSection" class="auth-form">
+                        <p class="auth-instructions">
+                            Step 1 — Enter credentials and click <strong>Get Token</strong>.<br>
+                            Step 2 — Click <strong>Verify Token</strong> to unlock access.
+                        </p>
+
+                        <div class="field-group">
+                            <label>USERNAME</label>
+                            <input type="text" id="username" placeholder="callsign" autocomplete="off">
+                        </div>
+                        <div class="field-group">
+                            <label>PASSWORD</label>
+                            <input type="password" id="password" placeholder="••••••••">
+                        </div>
+                        <div class="field-group">
+                            <label>ACCESS TOKEN</label>
+                            <input type="text" id="token" placeholder="auto-filled after Get Token">
+                        </div>
+
+                        <div id="authMessage" class="auth-message"></div>
+
+                        <div class="auth-buttons">
+                            <button class="btn-secondary" onclick="login()">Get Token</button>
+                            <button class="btn-primary"   onclick="authenticate()">Verify Token</button>
+                        </div>
+                    </div>
+
+                    <div id="obiwanVideo" style="display:none;">
+                        <p class="access-granted">// ACCESS GRANTED //</p>
+                        <div class="video-wrap">
+                            <iframe width="560" height="315"
+                                src="https://www.youtube.com/embed/zGwszApFEcY"
+                                frameborder="0" allowfullscreen>
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="message-section">
+                <h2>Transmission Message</h2>
+                <div class="message-box">
+                    <p class="message-placeholder">Awaiting incoming transmission...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>TEAM 12 &nbsp;|&nbsp; Anna &nbsp;·&nbsp; Kristin &nbsp;·&nbsp; Aiden</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+    // Animated starfield canvas
+    (function() {
+        const canvas = document.getElementById('starfield');
+        const ctx    = canvas.getContext('2d');
+        let stars    = [];
+
+        function resize() {
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+
+        function initStars(n) {
+            stars = Array.from({ length: n }, () => ({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.2 + 0.2,
+                a: Math.random(),
+                da: (Math.random() - 0.5) * 0.004,
+            }));
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            stars.forEach(s => {
+                s.a = Math.max(0.05, Math.min(1, s.a + s.da));
+                if (s.a <= 0.05 || s.a >= 1) s.da *= -1;
+                ctx.beginPath();
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,255,255,${s.a})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(draw);
+        }
+
+        resize();
+        initStars(200);
+        draw();
+        window.addEventListener('resize', () => { resize(); initStars(200); });
+    })();
+    </script>
+</body>
+</html>
