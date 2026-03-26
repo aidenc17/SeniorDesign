@@ -97,7 +97,7 @@ def find_all_images(root_path):
 
 def main(): 
     # Search for Raspberry Pi USB
-    usb_root = "/media/group7" # CHAGNED TO RUN ON KALLI PI
+    usb_root = "/media/raspberrypi" # CHAGNED TO RUN ON KALLI PI
     output_folder = OUTPUT_FOLDER
     
     print(f"Looking for USB at: {usb_root}\n")
