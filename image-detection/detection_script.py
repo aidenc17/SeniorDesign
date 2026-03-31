@@ -4,7 +4,9 @@ import os
 import shutil
 from pathlib import Path
 
-OUTPUT_FOLDER = "detected_images"
+# Use absolute path based on script location, not cwd
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "detected_images")
 
 def detect_red_circle(image_path):
     image = cv2.imread(image_path)
