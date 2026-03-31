@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-Death Star Vulnerability Server - Flask Edition
-Serves the web app, handles auth, and auto-generates image list on each request.
+Death Star Vulnerability Server - Flask Edition (Raspberry Pi)
 """
 
 from flask import Flask, request, jsonify, send_from_directory, send_file
@@ -13,10 +12,10 @@ import time
 from pathlib import Path
 from datetime import datetime
 
-# ── Config ──────────────────────────────────────────────────────────────────
-PORT = 8000
+# ── Config ───────────────────────────────────────────────────────────────────
+PORT        = int(os.environ.get("PORT", 8000))
 BASE_DIR    = Path(__file__).parent.resolve()
-IMAGES_DIR  = (BASE_DIR / "../received_images").resolve()
+IMAGES_DIR  = Path(os.environ.get("IMAGES_DIR", str((BASE_DIR / "../received_images").resolve())))
 
 TOKEN_EXPIRY = 300  # 5 minutes
 
@@ -30,27 +29,22 @@ USERS = {
 
 ACTIVE_TOKENS: dict = {}
 
-# ── Flask app ────────────────────────────────────────────────────────────────
+# ── Flask app ─────────────────────────────────────────────────────────────────
 app = Flask(__name__, static_folder=str(BASE_DIR), static_url_path="")
 
 
-# ── Helpers ──────────────────────────────────────────────────────────────────
+# ── Helpers ───────────────────────────────────────────────────────────────────
 def build_image_list() -> dict:
-    """
-    Scan IMAGES_DIR for PNG files, sanitize filenames, return metadata dict.
-    Called live on each /images.json request — no stale JSON file needed.
-    """
     images = []
 
     if not IMAGES_DIR.exists():
-        print(f"[WARN] received_images directory not found: {IMAGES_DIR}")
+        print(f"[WARN] Images directory not found: {IMAGES_DIR}")
         return {"generated": datetime.now().isoformat(), "total_images": 0, "images": []}
 
     for file in sorted(IMAGES_DIR.iterdir()):
         if file.suffix.lower() != ".png":
             continue
 
-        # sanitize filename (remove spaces & special chars)
         clean_name = re.sub(r"[^a-zA-Z0-9_.-]", "_", file.name)
         if file.name != clean_name:
             file = file.rename(file.with_name(clean_name))
@@ -58,28 +52,26 @@ def build_image_list() -> dict:
         stat = file.stat()
         images.append({
             "filename": file.name,
-            "path": f"/received_images/{file.name}",
-            "size": stat.st_size,
-            "size_kb": round(stat.st_size / 1024, 2),
+            "path":     f"/received_images/{file.name}",
+            "size":     stat.st_size,
+            "size_kb":  round(stat.st_size / 1024, 2),
             "modified": datetime.fromtimestamp(stat.st_mtime).isoformat(),
         })
 
     return {
-        "generated": datetime.now().isoformat(),
+        "generated":    datetime.now().isoformat(),
         "total_images": len(images),
-        "images": images,
+        "images":       images,
     }
 
 
-# ── Routes ───────────────────────────────────────────────────────────────────
-
+# ── Routes ────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
     return send_file(BASE_DIR / "index.html")
 
 @app.route("/images.json")
 def images_json():
-    """Auto-generate fresh image list every time — no need to run generate_image_list.py"""
     data = build_image_list()
     response = jsonify(data)
     response.headers["Cache-Control"] = "no-store"
@@ -90,11 +82,9 @@ def serve_image(filename):
     return send_from_directory(str(IMAGES_DIR), filename)
 
 
-# ── Auth endpoints ───────────────────────────────────────────────────────────
-
+# ── Auth ──────────────────────────────────────────────────────────────────────
 @app.route("/login", methods=["POST"])
 def login():
-    """Step 1 — validate username/password, issue a short-lived token."""
     data     = request.get_json(force=True)
     username = data.get("username", "").strip()
     password = data.get("password", "")
@@ -112,7 +102,6 @@ def login():
 
 @app.route("/verify", methods=["POST"])
 def verify():
-    """Step 2 — verify a token for a given username."""
     data     = request.get_json(force=True)
     username = data.get("username", "").strip()
     token    = data.get("token", "").strip()
@@ -124,38 +113,33 @@ def verify():
     return jsonify({"success": False, "error": "Invalid or expired token"}), 401
 
 
-# ── Entry point ──────────────────────────────────────────────────────────────
+# ── Entry point ───────────────────────────────────────────────────────────────
 if __name__ == "__main__":
     import socket
 
     def get_local_ip():
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-            s.connect(("8.8.8.8", 80))  # no data sent
+            s.connect(("8.8.8.8", 80))
             ip = s.getsockname()[0]
             s.close()
             return ip
-        except:
+        except Exception:
             return "127.0.0.1"
 
     local_ip = get_local_ip()
 
     print("=" * 60)
-    print("  Death Star Secure Server  (Flask)")
+    print("  Death Star Secure Server  (Flask / Raspberry Pi)")
+    print("=" * 60)
+    print(f"\n  Local:   http://localhost:{PORT}")
+    print(f"  Network: http://{local_ip}:{PORT}")
+    print(f"  Images:  {IMAGES_DIR}")
+    print(f"  Token expiry: {TOKEN_EXPIRY}s")
+    print("\n  Tip: for production use, run with gunicorn:")
+    print(f"       gunicorn -w 2 -b 0.0.0.0:{PORT} server:app")
+    print("\nPress Ctrl+C to stop.")
     print("=" * 60)
 
-    print("\nLocal access:")
-    print(f"  → http://localhost:{PORT}")
-    print(f"  → http://127.0.0.1:{PORT}")
-
-    print("\nNetwork access (same WiFi):")
-    print(f"  → http://{local_ip}:{PORT}")
-
-    print(f"\nImages directory:")
-    print(f"  → {IMAGES_DIR}")
-
-    print(f"\nToken expiry: {TOKEN_EXPIRY}s")
-    print("\nPress Ctrl+C to stop the server")
-    print("=" * 60)
-
-    app.run(host="0.0.0.0", port=PORT, debug=False)
+    # Use threaded=True so the Pi handles concurrent requests without hanging
+    app.run(host="0.0.0.0", port=PORT, debug=False, threaded=True)
