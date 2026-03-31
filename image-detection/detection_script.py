@@ -90,6 +90,9 @@ def find_all_images(root_path):
     
     for dirpath, dirnames, filenames in os.walk(root_path):
         for filename in filenames:
+            # Skip macOS metadata files
+            if filename.startswith("._"):
+                continue
             if filename.lower().endswith(image_extensions):
                 full_path = os.path.join(dirpath, filename)
                 image_files.append(full_path)
