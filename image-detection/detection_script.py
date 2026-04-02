@@ -19,7 +19,7 @@ def detect_red_circle(image_path):
     upper_red1 = np.array([10, 255, 255])
     lower_red2 = np.array([170, 150, 100])
     upper_red2 = np.array([180, 255, 255])
-    
+
     # create masks for red color
     # masks do a bitwise OR to combine both ranges
     mask1 = cv2.inRange(hsv_image, lower_red1, upper_red1)

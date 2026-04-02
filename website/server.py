@@ -42,7 +42,7 @@ def build_image_list() -> dict:
         return {"generated": datetime.now().isoformat(), "total_images": 0, "images": []}
 
     for file in sorted(IMAGES_DIR.iterdir()):
-        if file.suffix.lower() != ".png":
+        if file.suffix.lower() not in (".png", ".jpg", ".jpeg"):
             continue
 
         clean_name = re.sub(r"[^a-zA-Z0-9_.-]", "_", file.name)
