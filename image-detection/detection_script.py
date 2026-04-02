@@ -3,10 +3,43 @@ import numpy as np
 import os
 import shutil
 from pathlib import Path
+import time
 
 # Use absolute path based on script location, not cwd
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 OUTPUT_FOLDER = os.path.join(SCRIPT_DIR, "detected_images")
+
+def is_hollow_circle(red_mask, cx, cy, radius):
+    # sample the interior at 50% of the radius
+    # if the center is mostly non-red, it's a hollow ring
+    h, w = red_mask.shape[:2]
+    
+    # sample radius is 50% of detected radius
+    # CAN TWEAK LATER IF NEEDED
+    sample_r = max(2, int(radius * 0.5))
+    
+    total = 0
+    red_pixels = 0
+    
+    for dy in range(-sample_r, sample_r + 1):
+        for dx in range(-sample_r, sample_r + 1):
+            # only sample pixels within the inner circle
+            if dx**2 + dy**2 <= sample_r**2:
+                px, py = cx + dx, cy + dy
+                if 0 <= px < w and 0 <= py < h:
+                    total += 1
+                    if red_mask[py, px] > 0:
+                        red_pixels += 1
+    
+    if total == 0:
+        return False
+    
+    interior_red_ratio = red_pixels / total
+    # hollow = center is mostly NOT red
+    # perfect hollow = 0.0, perfect solid = 1.0
+    # CAN CHANGE
+    return interior_red_ratio < 0.2
+
 
 def detect_red_circle(image_path):
     image = cv2.imread(image_path)
@@ -52,7 +85,13 @@ def detect_red_circle(image_path):
         if circularity > 0.75:
             # Get the circle's center and radius
             (x, y), radius = cv2.minEnclosingCircle(contour)
-            return (int(x), int(y), int(radius))
+            cx, cy, r = int(x), int(y), int(radius)
+            
+            # reject solid red blobs (robot eyes), only keep hollow rings
+            if is_hollow_circle(red_mask, cx, cy, r):
+                return (cx, cy, r)
+            else:
+                print(f"  Skipped solid red blob at ({cx}, {cy}) r={r}")
     
     return None
 
@@ -99,7 +138,6 @@ def find_all_images(root_path):
                 print(f"  Found: {filename}")
     
     return image_files
-import time
 
 def find_usb():
     """
