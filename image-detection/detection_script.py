@@ -99,56 +99,90 @@ def find_all_images(root_path):
                 print(f"  Found: {filename}")
     
     return image_files
+import time
+
+def find_usb():
+    """
+    Wait for a USB to be plugged in at /media/raspberrypi
+    Returns the path to the first detected USB mount
+    """
+    print("Waiting for USB to be plugged in...")
+    print("Monitoring: /media/raspberrypi\n")
+    
+    previous_mounts = set(os.listdir("/media/raspberrypi")) if os.path.exists("/media/raspberrypi") else set()
+    
+    while True:
+        try:
+            if os.path.exists("/media/raspberrypi"):
+                current_mounts = set(os.listdir("/media/raspberrypi"))
+                
+                # Check if new USB was plugged in
+                new_mounts = current_mounts - previous_mounts
+                
+                if new_mounts:
+                    usb_path = os.path.join("/media/raspberrypi", list(new_mounts)[0])
+                    print(f"USB detected at: {usb_path}\n")
+                    return usb_path
+                
+                previous_mounts = current_mounts
+            
+            time.sleep(1)  # Check every second
+        except KeyboardInterrupt:
+            print("\nScript interrupted by user")
+            return None
 
 def main(): 
-    # Search for Raspberry Pi USB
-    usb_root = "/media/raspberrypi" # CHAGNED TO RUN ON KALLI PI
+    print("=" * 60)
+    print("Red Circle Detection - USB Monitor Mode")
+    print("=" * 60 + "\n")
+    
     output_folder = OUTPUT_FOLDER
     
-    print(f"Looking for USB at: {usb_root}\n")
-    
-    if not os.path.exists(usb_root):
-        print(f"ERROR: USB not found at {usb_root}")
-        return
-    
-    # Find all images recursively
-    image_files = find_all_images(usb_root)
-    
-    if not image_files:
-        print("ERROR: No images found on USB")
-        return
-    
-    print(f"\nFound {len(image_files)} total images\n")
-    
-    Path(output_folder).mkdir(parents=True, exist_ok=True)
-    
-    detected_count = 0
-    
-    for image_path in image_files:
-        filename = os.path.basename(image_path)
+    while True:
+        # Wait for USB to be plugged in
+        usb_root = find_usb()
         
-        try:
-            image = load_image(image_path)
-            circle = detect_red_circle(image_path)
+        if usb_root is None:
+            break
+        
+        # Find all images recursively (this still works)
+        image_files = find_all_images(usb_root)
+        
+        if not image_files:
+            print("ERROR: No images found on USB\n")
+            continue
+        
+        print(f"\nFound {len(image_files)} total images\n")
+        
+        Path(output_folder).mkdir(parents=True, exist_ok=True)
+        
+        detected_count = 0
+        
+        for image_path in image_files:
+            filename = os.path.basename(image_path)
             
-            if circle is not None:
-                x, y, r = circle
-                cropped_image = crop_circle(image, x, y, r)
-                output_path = os.path.join(output_folder, filename)
-                cv2.imwrite(output_path, cropped_image)
-                detected_count += 1
-                print(f"{filename}")
-            else:
-                print(f"{filename}")
-        except Exception as e:
-            print(f"{filename} - Error: {e}")
-    
-    print(f"\nDetection complete. Found {detected_count}/{len(image_files)} images with red circles.")
-    
-    # zips the detected images folder
-    zip_path = os.path.join(os.path.dirname(output_folder), f"{output_folder}.zip")
-    shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', output_folder)
-    print(f"Created zip file: {zip_path}")
+            try:
+                image = load_image(image_path)
+                circle = detect_red_circle(image_path)
+                
+                if circle is not None:
+                    x, y, r = circle
+                    cropped_image = crop_circle(image, x, y, r)
+                    output_path = os.path.join(output_folder, filename)
+                    cv2.imwrite(output_path, cropped_image)
+                    detected_count += 1
+                    print(f" {filename}")
+                else:
+                    print(f" {filename}")
+            except Exception as e:
+                print(f"{filename} - Error: {e}")
+        
+        print(f"\nDetection complete. Found {detected_count}/{len(image_files)} images with red circles.")
+        
+        # zips the detected images folder
+        zip_path = os.path.join(os.path.dirname(output_folder), f"{output_folder}.zip")
+        shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', output_folder)
+        print(f"Created zip file: {zip_path}\n")
 
 if __name__ == "__main__":
     main()
