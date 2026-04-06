@@ -221,6 +221,7 @@ def main():
         zip_path = os.path.join(os.path.dirname(output_folder), f"{output_folder}.zip")
         shutil.make_archive(os.path.splitext(zip_path)[0], 'zip', output_folder)
         print(f"Created zip file: {zip_path}\n")
+        break  # exit after processing one USB cycle
 
 if __name__ == "__main__":
     main()
