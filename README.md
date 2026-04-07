@@ -34,7 +34,7 @@ This project demonstrates a complete secure data exfiltration and distribution p
 ### Key Features
 
 - Computer vision-based vulnerability detection using OpenCV
-- AES-256 encryption for data security
+- AES-128 encryption for data security
 - Covert RF communication (no WiFi/Bluetooth/Ethernet on transmitter)
 - Two-tier authentication system (public + restricted access)
 - Complete pipeline orchestration via Bash script
@@ -46,14 +46,14 @@ This project demonstrates a complete secure data exfiltration and distribution p
 ```
 ┌─────────────────┐      ┌──────────────────┐      ┌─────────────────┐
 │  USB Drive      │      │   Raspberry Pi   │      │  RF Transmitter │
-│  (100 images)   │─────▶│  • Detection     │─────▶│  (RFM69 433MHz) │
+│  (100 images)   │─────▶│  • Detection     │─────▶│  (RFM69 915MHz) │
 └─────────────────┘      │  • Encryption    │      └────────┬────────┘
                          │                  │               │
                          └──────────────────┘               │ Wireless
                                                              │ (5+ meters)
 ┌─────────────────┐      ┌──────────────────┐      ┌───────▼─────────┐
 │  Web Browser    │      │   Local Server   │      │  RF Receiver    │
-│  • Public View  │◀─────│  • Web Server    │◀─────│  (RFM69 433MHz) │
+│  • Public View  │◀─────│  • Web Server    │◀─────│  (RFM69 915MHz) │
 │  • Auth Access  │HTTP  │                  │      └─────────────────┘
 └─────────────────┘      └──────────────────┘
 ```
@@ -96,7 +96,7 @@ SeniorDesign/
 ### Hardware
 
 - **Raspberry Pi 4 Model B** (4GB RAM)
-- **RFM69HCW Radio Modules** (2x, 433 MHz)
+- **RFM69HCW Radio Modules** (2x, 915 MHz)
 - **MicroSD Card** (64GB, Class 10)
 - **USB Thumb Drive** (for image delivery)
 - **PC/Laptop** (for receiver and web server)
@@ -198,7 +198,7 @@ python3 server.py
 
 ### RF Transmission Module
 
-- **Radio**: RFM69HCW (433 MHz, ISM band)
+- **Radio**: RFM69HCW (915 MHz, ISM band)
 - **Protocol**: Custom packet-based with checksums
 - **Range**: 5+ meters through obstacles (glass enclosure)
 - **Data Rate**: Optimized for 600-second transmission window
@@ -238,7 +238,7 @@ The following constraints shaped system design decisions:
 **Group 12 - Wright State University**
 
 - **Aiden Cox** (CS) - Pipeline Integration / Automation / Circle Detection / Project Lead
-- **Kristin** (CS) - Hardware Design & RF Protocol
+- **Kristin** (CS) - Hardware Design & RF Protocol (Sending, Receiving, Encryption)
 - **Annal** (EE) - Hardware Design & RF Circuits
 - **Tom Pua** (IT) - System Testing
 ---
