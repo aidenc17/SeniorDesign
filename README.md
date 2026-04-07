@@ -26,8 +26,8 @@ A covert wireless communication system that autonomously identifies Death Star v
 This project demonstrates a complete secure data exfiltration and distribution pipeline:
 
 1. **Image Analysis**: Computer vision identifies vulnerability markers (red circles) in 100 provided images
-2. **Encryption**: Detected images are encrypted using AES-256 and packaged into a secure archive
-3. **RF Transmission**: Encrypted data is transmitted wirelessly via RFM69 radio modules (433 MHz)
+2. **Encryption**: Detected images are encrypted using AES-128 and packaged into a secure archive
+3. **RF Transmission**: Encrypted data is transmitted wirelessly via RFM69 radio modules (915 MHz)
 4. **Reception & Decryption**: Receiving station validates and decrypts transmitted data
 5. **Web Interface**: Authenticated users access vulnerability data through a locally-hosted website
 
