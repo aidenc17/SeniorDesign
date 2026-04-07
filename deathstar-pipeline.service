@@ -1,0 +1,27 @@
+# /etc/systemd/system/deathstar-pipeline.service
+
+[Unit]
+Description=Death Star Detection Pipeline
+After=network.target
+# If you need the network to be fully up (e.g. for any upload step later):
+# After=network-online.target
+# Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=pi
+WorkingDirectory=/home/pi/SeniorDesign
+ExecStart=/bin/bash /home/pi/SeniorDesign/run_pipeline_service.sh
+
+# Output logs to journald (view with: journalctl -u deathstar-pipeline)
+StandardOutput=journal
+StandardError=journal
+
+# Don't restart automatically — this is a one-shot task
+RemainAfterExit=no
+
+# Give it time to finish (detection + RF send can take a while)
+TimeoutStartSec=300
+
+[Install]
+WantedBy=multi-user.target
