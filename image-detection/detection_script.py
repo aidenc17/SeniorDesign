@@ -159,6 +159,8 @@ def find_usb():
                 
                 if new_mounts:
                     usb_path = os.path.join("/media/raspberrypi", list(new_mounts)[0])
+
+                    time.sleep(5)  # small delay to ensure mount is ready
                     print(f"USB detected at: {usb_path}\n")
                     return usb_path
                 
