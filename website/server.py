@@ -15,7 +15,7 @@ from datetime import datetime
 # ── Config ───────────────────────────────────────────────────────────────────
 PORT        = int(os.environ.get("PORT", 8000))
 BASE_DIR    = Path(__file__).parent.resolve()
-IMAGES_DIR  = Path(os.environ.get("IMAGES_DIR", str((BASE_DIR / "../received_images").resolve())))
+IMAGES_DIR  = Path(os.environ.get("IMAGES_DIR", str((BASE_DIR / "../RF-receiver/received_images").resolve())))
 
 TOKEN_EXPIRY = 300  # 5 minutes
 
