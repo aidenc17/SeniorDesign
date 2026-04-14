@@ -9,75 +9,98 @@ function showTab(tabId, btn) {
     if (btn) btn.classList.add('active');
 }
 
-// ── Auth ──────────────────────────────────────────────────────────────────────
-let currentToken = null;
+// ── Auth state ────────────────────────────────────────────────────────────────
+let currentUsername = "";
 
-// STEP 1: POST /login → get token
+// STEP 1: POST /login → sends OTP email
 async function login() {
     const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value;
 
     if (!username || !password) {
-        showAuthMessage("Enter a username and password first.", "error");
+        showAuthMessage("Enter your email and password first.", "error");
         return;
     }
 
-    try {
-        const res = await fetch("/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password }),
-        });
+    showAuthMessage("Sending code...", "");
 
-        if (res.ok) {
-            const data = await res.json();
-            currentToken = data.token;
-            document.getElementById("token").value = currentToken; // auto-fill
-            showAuthMessage("Token issued — click Verify Token to authenticate.", "success");
+    try {
+        const res  = await fetch("/login", {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+            currentUsername = username;
+            // Show OTP step
+            document.getElementById("step1").style.display = "none";
+            document.getElementById("step2").style.display = "block";
+            showOtpMessage("Code sent — check your email.", "success");
         } else {
-            showAuthMessage("Login failed. Check your username and password.", "error");
+            showAuthMessage("Login failed. Check your email and password.", "error");
         }
     } catch {
         showAuthMessage("Network error. Is the server running?", "error");
     }
 }
 
-// STEP 2: POST /verify → unlock video
-async function authenticate() {
-    const username = document.getElementById("username").value.trim();
-    const token    = document.getElementById("token").value.trim();
+// STEP 2: POST /verify-otp → unlock video
+async function verifyOtp() {
+    const otp = document.getElementById("otpInput").value.trim();
 
-    if (!username || !token) {
-        showAuthMessage("Enter your username and token, then click Verify Token.", "error");
+    if (!otp) {
+        showOtpMessage("Enter the 6-digit code from your email.", "error");
         return;
     }
 
-    try {
-        const res = await fetch("/verify", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, token }),
-        });
+    showOtpMessage("Verifying...", "");
 
-        if (res.ok) {
+    try {
+        const res  = await fetch("/verify-otp", {
+            method:  "POST",
+            headers: { "Content-Type": "application/json" },
+            body:    JSON.stringify({ username: currentUsername, otp }),
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
             document.getElementById("authSection").style.display = "none";
             document.getElementById("obiwanVideo").style.display = "block";
         } else {
-            showAuthMessage("Invalid or expired token. Use Get Token to request a new one.", "error");
+            showOtpMessage(data.error || "Invalid or expired code.", "error");
         }
     } catch {
-        showAuthMessage("Network error. Is the server running?", "error");
+        showOtpMessage("Network error. Is the server running?", "error");
     }
+}
+
+// Back button — return to step 1
+function resetAuth() {
+    currentUsername = "";
+    document.getElementById("step2").style.display  = "none";
+    document.getElementById("step1").style.display  = "block";
+    document.getElementById("otpInput").value       = "";
+    showOtpMessage("", "");
+    showAuthMessage("", "");
 }
 
 function showAuthMessage(msg, type) {
     const el = document.getElementById("authMessage");
     if (!el) return;
     el.textContent = msg;
-    el.className = "auth-message " + type;
+    el.className   = "auth-message " + type;
 }
 
-// ── Images ───────────────────────────────────────────────────────────────────
+function showOtpMessage(msg, type) {
+    const el = document.getElementById("otpMessage");
+    if (!el) return;
+    el.textContent = msg;
+    el.className   = "auth-message " + type;
+}
+
+// ── Images ────────────────────────────────────────────────────────────────────
 async function loadImages() {
     const gallery    = document.getElementById("imageGallery");
     const imageCount = document.getElementById("imageCount");

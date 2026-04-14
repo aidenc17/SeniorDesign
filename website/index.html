@@ -39,13 +39,7 @@
                 <div class="panel">
                     <h2 class="panel-title">Public Transmission</h2>
                     <div class="video-wrap">
-                        <video
-                            width="560"
-                            height="315"
-                            controls
-                            loop
-                            preload="metadata"
-                        >
+                        <video width="560" height="315" controls loop preload="metadata">
                             <source src="publicVideo.mp4" type="video/mp4">
                             <p>Your browser does not support the video element.</p>
                         </video>
@@ -59,47 +53,57 @@
                     <h2 class="panel-title">Restricted Jedi Transmission</h2>
 
                     <div id="authSection" class="auth-form">
-                        <p class="auth-instructions">
-                            Step 1 — Enter credentials and click <strong>Get Token</strong>.<br>
-                            Step 2 — Click <strong>Verify Token</strong> to unlock access.
-                        </p>
 
-                        <div class="field-group">
-                            <label>USERNAME</label>
-                            <input type="text" id="username" placeholder="callsign" autocomplete="off">
-                        </div>
-                        <div class="field-group">
-                            <label>PASSWORD</label>
-                            <input type="password" id="password" placeholder="••••••••">
-                        </div>
-                        <div class="field-group">
-                            <label>ACCESS TOKEN</label>
-                            <input type="text" id="token" placeholder="auto-filled after Get Token">
+                        <!-- STEP 1: Email + Password -->
+                        <div id="step1">
+                            <p class="auth-instructions">
+                                Step 1 — Enter your email and password, then click <strong>Send Code</strong>.<br>
+                                A one-time code will be emailed to you.
+                            </p>
+                            <div class="field-group">
+                                <label>EMAIL</label>
+                                <input type="text" id="username" placeholder="you@wright.edu" autocomplete="off">
+                            </div>
+                            <div class="field-group">
+                                <label>PASSWORD</label>
+                                <input type="password" id="password" placeholder="••••••••">
+                            </div>
+                            <div id="authMessage" class="auth-message"></div>
+                            <div class="auth-buttons">
+                                <button class="btn-primary" onclick="login()">Send Code</button>
+                            </div>
                         </div>
 
-                        <div id="authMessage" class="auth-message"></div>
-
-                        <div class="auth-buttons">
-                            <button class="btn-secondary" onclick="login()">Get Token</button>
-                            <button class="btn-primary"   onclick="authenticate()">Verify Token</button>
+                        <!-- STEP 2: OTP (hidden until step 1 succeeds) -->
+                        <div id="step2" style="display:none;">
+                            <p class="auth-instructions">
+                                Step 2 — Check your email for a 6-digit code and enter it below.
+                            </p>
+                            <div class="field-group">
+                                <label>ONE-TIME CODE</label>
+                                <input type="text" id="otpInput" placeholder="000000" maxlength="6" autocomplete="off">
+                            </div>
+                            <div id="otpMessage" class="auth-message"></div>
+                            <div class="auth-buttons">
+                                <button class="btn-primary" onclick="verifyOtp()">Verify Code</button>
+                                <button class="btn-secondary" onclick="resetAuth()">Back</button>
+                            </div>
                         </div>
+
                     </div>
 
                     <div id="obiwanVideo" style="display:none;">
                         <p class="access-granted">// ACCESS GRANTED //</p>
                         <div class="video-wrap">
-                            <video
-                                width="560"
-                                height="315"
-                                controls
-                                loop
-                                preload="metadata"
-                            >
+                            <video width="560" height="315" controls loop preload="metadata">
                                 <source src="privateVideo.mp4" type="video/mp4">
                                 <p>Your browser does not support the video element.</p>
                             </video>
                         </div>
                     </div>
+
+                </div>
+            </div>
 
             <div class="message-section">
                 <h2>Transmission Message</h2>
