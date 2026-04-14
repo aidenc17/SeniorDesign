@@ -35,7 +35,7 @@ GMAIL_APP_PASS = os.environ.get("GMAIL_APP_PASSWORD", "")
 # Email is the username. Each user's email is also where their OTP gets sent.
 USERS = {
     "obiwan@wright.edu":  "obi1",
-    "cox.17@wright.edu":  "password",
+    "cox.378@wright.edu":  "password",
     "anna@wright.edu":    "12345",
     "kristin@wright.edu": "blueberry",
     "tom@wright.edu":     "banana",
